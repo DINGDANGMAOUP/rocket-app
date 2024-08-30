@@ -1,8 +1,18 @@
 use std::{collections::HashMap, fs::File, io::Read};
-
+use lazy_static::lazy_static;
 use toml::Value;
 
 const CONFIG_TOML_PATH: &str = "application.toml";
+lazy_static! {
+    pub static ref CONFIG: HashMap<String, Value> = {
+        let config = init_config().unwrap();
+        let mut map = HashMap::new();
+        for (key, value) in config.as_table().unwrap() {
+            map.insert(key.to_string(), value.clone());
+        }
+        map
+    };
+}
 pub fn init_config() -> Option<Value> {
     // 打开TOML文件
     let file = File::open(CONFIG_TOML_PATH);
@@ -20,3 +30,4 @@ pub fn init_config() -> Option<Value> {
     let toml_value: Value = toml::from_str(&content).unwrap();
     Some(toml_value)
 }
+
