@@ -1,0 +1,8 @@
+server:
+  port: 87545
+  host: localhost
+
+app:
+   debug: true
+   datasource:
+     url: postgres://postgres:postgres@localhost:5432/postgres

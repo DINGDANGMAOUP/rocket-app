@@ -1,79 +1,42 @@
 #[macro_use]
-extern crate diesel;
-
+extern crate rbatis;
 use actix_web::{
-    error, get, middleware::Logger, post, web, App, HttpResponse, HttpServer, Responder, Result,
+     middleware::Logger, web, App, HttpServer
 };
-use diesel::{prelude::*, r2d2};
-mod actions;
+use rbatis::{dark_std::defer, RBatis};
 mod config;
-mod dto;
-mod models;
-mod schema;
-type DbPool = r2d2::Pool<r2d2::ConnectionManager<PgConnection>>;
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
+mod controller;
+mod domain;
+mod mapper;
+mod pojo;
+mod service;
 
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
-#[get("/list")]
-async fn list(pool: web::Data<DbPool>) -> Result<impl Responder> {
-    let us = web::block(move || {
-        let mut conn = pool.get().expect("couldn't get db connection from pool");
-        actions::all(&mut conn)
-    })
-    .await?
-    .map_err(error::ErrorInternalServerError)?;
+//监听systemconfig 发生变化时重新加载配置rbatis
 
-    Ok(HttpResponse::Ok().json(us))
-}
-/// extract `Info` using serde
-async fn index(info: web::Json<dto::Info>) -> Result<String> {
-    log::debug!("model::person::Info: {:?}", info);
-    Ok(format!("Welcome {}!", info.username))
-}
-async fn manual_hello() -> impl Responder {
-    let res = dto::User {
-        name: "John".to_string(),
-        age: 32,
-    };
-    HttpResponse::Ok().json(res)
-}
-
-fn initialize_db_pool() -> DbPool {
-    let conn_spec = std::env::var("DATABASE_URL").expect("DATABASE_URL should be set");
-    let manager = r2d2::ConnectionManager::<PgConnection>::new(conn_spec);
-    r2d2::Pool::builder()
-        .build(manager)
-        .expect("database URL should be valid path to SQLite DB file")
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    std::env::set_var("RUST_LOG", "debug");
-    // std::env::set_var("RUST_BACKTRACE", "full");
-    std::env::set_var(
-        "DATABASE_URL",
-        "postgres://postgres:postgres@localhost:5432/postgres",
+    _ = fast_log::init(
+        fast_log::Config::new()
+            .console()
+            .level(log::LevelFilter::Debug),
     );
-    env_logger::init();
-    let pool = initialize_db_pool();
-    let config = config::init_config();
-    // env_logger::init_from_env(Env::default().default_filter_or("deubg"));
+    defer!(|| {
+        log::logger().flush();
+    });
+    let config = config::config::SystemConfig::default();
+    let rb = RBatis::new();
+    rb.init(rbdc_pg::driver::PgDriver {}, &config.app.datasource.url)
+        .unwrap();
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(config.clone()))
-            .app_data(web::Data::new(pool.clone()))
+            .app_data(web::Data::new(rb.clone()))
             .wrap(Logger::default())
-            .service(hello)
-            .service(echo)
-            .service(list)
-            .route("/index", web::post().to(index))
-            .route("/hey", web::get().to(manual_hello))
+            .service(controller::test_controller::hello)
+            .service(controller::test_controller::echo)
+            .route("/index", web::post().to(controller::test_controller::index))
+            .route("/hey", web::get().to(controller::test_controller::manual_hello))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
