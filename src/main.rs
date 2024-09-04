@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate rbatis;
 use actix_web::{middleware::Logger, web, App, HttpServer};
-use domain::table::tables::User;
 use rbatis::{dark_std::defer, RBatis};
 use crate::controller::test_controller::{echo, hello,index,manual_hello};
 mod config;
@@ -22,6 +21,7 @@ async fn main() -> std::io::Result<()> {
         log::logger().flush();
     });
     let config = config::config::SystemConfig::default();
+    config::log::init_log(&config);
     let rb = RBatis::new();
     rb.init(rbdc_pg::driver::PgDriver {}, &config.app.datasource.url)
         .unwrap();

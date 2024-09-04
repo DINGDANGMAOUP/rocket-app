@@ -4,6 +4,7 @@ use crate::{domain, pojo};
 #[get("/")]
 pub  async fn hello(rb: web::Data<RBatis>) -> impl Responder {
     let users = domain::table::tables::User::select_all(&**rb).await.unwrap();
+    log::info!("users: {:?}", users);
     HttpResponse::Ok().json(users)
 }
 

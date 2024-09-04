@@ -16,6 +16,6 @@ rbatis = { version = "4.5.29"}
 rbdc-pg={version="4.5.12"}
 #log
 log = "0.4.22"
-fast_log = "1.7.3"
+fast_log ={version= "1.7.3",features = ["lz4", "zip", "gzip"]}
 
     

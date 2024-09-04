@@ -35,7 +35,7 @@ pub async fn sync_tables(rb: &RBatis) {
 
 pub async fn sync_tables_data(rb: &RBatis) {
     let conn = rb.acquire().await.expect("init data fail");
-    if let Ok(v) = User::select_by_column(&conn, "id", "1").await {
+    if let Ok(v) = User::select_by_column(&conn, "id", 0).await {
         if v.len() > 0 {
             //if user exists,return
             return;

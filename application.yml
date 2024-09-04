@@ -6,3 +6,12 @@ app:
    debug: true
    datasource:
      url: postgres://postgres:postgres@localhost:5432/postgres
+
+logging:
+  level: debug
+  dir: logs/
+  rolling: day
+  keepType: KeepNum(120)
+  packCompress: gzip
+  chanLen: 100000
+

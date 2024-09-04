@@ -11,6 +11,16 @@ pub struct Server {
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
+pub struct LogConfig{
+    pub level: String,
+    pub dir: String,
+    pub rolling: String,
+    pub keep_type: String,
+    pub pack_compress: String,
+    pub chan_len: usize,
+}
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct Datasource {
     pub url: String,
 }
@@ -26,6 +36,8 @@ pub struct AppConfig {
 pub struct SystemConfig {
     pub server: Server,
     pub app: AppConfig,
+    pub logging: LogConfig,
+
 }
 
 impl Default for SystemConfig {
