@@ -3,7 +3,7 @@ use rbatis::RBatis;
 use crate::{domain, pojo};
 #[get("/")]
 pub  async fn hello(rb: web::Data<RBatis>) -> impl Responder {
-    let users = domain::user::User::select_all(&**rb).await.unwrap();
+    let users = domain::table::tables::User::select_all(&**rb).await.unwrap();
     HttpResponse::Ok().json(users)
 }
 
