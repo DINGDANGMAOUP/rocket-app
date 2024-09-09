@@ -11,18 +11,33 @@ pub struct Server {
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
-pub struct LogConfig{
+pub struct LogConfig {
+    //log_level: off,info,error,warn,debug,trace
     pub level: String,
+    //log dir, you can use "target/logs/abc.log"  default is "target/logs/"
     pub dir: String,
+    //rolling by LogFileSize use[1KB,1MB,1GB], rolling by date use ['hour','minute','day'],rolling by Duration use ['1hour','10minute','1day']
     pub rolling: String,
+    // Log rolling retention options:
+    // Retain all logs: All
+    // Retain logs by time (in seconds): KeepTime(i64)
+    // Retain logs by version: KeepNum(i64)
     pub keep_type: String,
+    // Optional log packaging formats: "" (keep as .log), "gzip" (GZip compressed), "zip" (ZIP compressed), "lz4" (LZ4 compressed (very fast))
+    // The following options need to be enabled:
+    // Inside the toml file, add to 'fast_log': fast_log = { version = "1.5", features = ["lz4", "zip", "gzip"]}
+    // In src/config/log.rs, uncomment the section under fn choose_packer()
+    // In application.json5, add: log_pack_compress: "zip"
     pub pack_compress: String,
+    //Log channel length: null for unbounded queue, non-null for bounded queue (better performance)
     pub chan_len: usize,
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct Datasource {
     pub url: String,
+    pub db_pool_len: usize,
+    pub db_pool_timeout: usize,
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -37,7 +52,6 @@ pub struct SystemConfig {
     pub server: Server,
     pub app: AppConfig,
     pub logging: LogConfig,
-
 }
 
 impl Default for SystemConfig {

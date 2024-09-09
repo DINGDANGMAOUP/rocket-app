@@ -6,6 +6,8 @@ app:
    debug: true
    datasource:
      url: postgres://postgres:postgres@localhost:5432/postgres
+     dbPoolLen: 32
+     dbPoolTimeout: 60
 
 logging:
   level: debug
