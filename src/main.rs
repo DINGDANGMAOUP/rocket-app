@@ -1,14 +1,5 @@
-#[macro_use]
-extern crate rbatis;
-use crate::controller::test_controller::{echo, hello, index, manual_hello};
+use platform_app::{config, controller::test_controller::{echo, hello, index, manual_hello}, domain};
 use actix_web::{middleware::Logger, web, App, HttpServer};
-mod config;
-mod controller;
-mod domain;
-mod mapper;
-mod pojo;
-mod service;
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let config = config::config::SystemConfig::default();
