@@ -5,9 +5,10 @@ server:
 app:
    debug: true
    datasource:
-     url: postgres://postgres:postgres@localhost:5432/postgres
-     dbPoolLen: 32
-     dbPoolTimeout: 60
+    url: postgres://postgres:postgres@localhost:5432/postgres
+    #  url: postgres://kuroneko:kuroneko@10.10.201.24:7001/rust_demo
+    dbPoolLen: 32
+    dbPoolTimeout: 60
 
 logging:
   level: debug

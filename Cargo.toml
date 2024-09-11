@@ -12,7 +12,7 @@ futures = "0.3.30"
 chrono="0.4.38"
 #rbatis deps
 rbs = { version = "4.5.18"}
-rbatis = { version = "4.5.29"}
+rbatis = { version = "4.5.30"}
 rbdc-pg={version="4.5.12"}
 #log
 log = "0.4.22"

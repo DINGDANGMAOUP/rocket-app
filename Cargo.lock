@@ -1522,9 +1522,9 @@ dependencies = [
 
 [[package]]
 name = "rbatis"
-version = "4.5.29"
+version = "4.5.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d35a7ea98a44bc09514cf65199bc692de72deb4778eb0dc2efc0f9f929f9c0f"
+checksum = "d09532f679641de354a9d36de2bc68428e96a4485687781669dbee030ad2439a"
 dependencies = [
  "async-trait",
  "dark-std",
@@ -1532,6 +1532,7 @@ dependencies = [
  "futures-core",
  "hex",
  "log",
+ "parking_lot",
  "rand",
  "rbatis-codegen",
  "rbatis-macro-driver",

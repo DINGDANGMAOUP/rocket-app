@@ -57,7 +57,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
     let users = vec![
         User {
             common: CommonTable{
-                id: Some(Default::default()),
+                id: Some(0),
                 create_time: Some(Default::default()),
                 update_time: Some(Default::default()),
                 create_by: Some(Default::default()),
@@ -75,7 +75,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
         },
         User {
             common: CommonTable{
-                id: Some(Default::default()),
+                id: Some(1),
                 create_time: Some(Default::default()),
                 update_time: Some(Default::default()),
                 create_by: Some(Default::default()),
