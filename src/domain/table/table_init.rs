@@ -1,4 +1,4 @@
-use crate::domain::table::tables::User;
+use crate::domain::table::tables::{CommonTable, User};
 use log::LevelFilter;
 use rbatis::dark_std::defer;
 use rbatis::intercept_log::LogInterceptor;
@@ -27,7 +27,15 @@ pub async fn sync_tables(rb: &RBatis) {
     };
     let conn = rb.acquire().await.expect("connection database fail");
     let table = User {
-        id: Some(Default::default()),
+        common: CommonTable{
+            id: Some(Default::default()),
+            create_time: Some(Default::default()),
+            update_time: Some(Default::default()),
+            create_by: Some(Default::default()),
+            update_by: Some(Default::default()),
+            remark: Some(Default::default()),
+            del_flag: Some(Default::default()),
+        },
         username: Some(Default::default()), 
         password: Some(Default::default()),
         nick_bame: Some(Default::default()),
@@ -48,7 +56,15 @@ pub async fn sync_tables_data(rb: &RBatis) {
     };
     let users = vec![
         User {
-            id: Some(0),
+            common: CommonTable{
+                id: Some(Default::default()),
+                create_time: Some(Default::default()),
+                update_time: Some(Default::default()),
+                create_by: Some(Default::default()),
+                update_by: Some(Default::default()),
+                remark: Some(Default::default()),
+                del_flag: Some(Default::default()),
+            },
             username: Some("admin".to_string()),
             password: Some("123456".to_string()),
             nick_bame: Some("admin".to_string()),
@@ -58,7 +74,15 @@ pub async fn sync_tables_data(rb: &RBatis) {
 
         },
         User {
-            id: Some(1),
+            common: CommonTable{
+                id: Some(Default::default()),
+                create_time: Some(Default::default()),
+                update_time: Some(Default::default()),
+                create_by: Some(Default::default()),
+                update_by: Some(Default::default()),
+                remark: Some(Default::default()),
+                del_flag: Some(Default::default()),
+            },
             username: Some("user".to_string()),
             password: Some("123".to_string()),
             nick_bame: Some("user".to_string()), 
