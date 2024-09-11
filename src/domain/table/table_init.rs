@@ -28,7 +28,8 @@ pub async fn sync_tables(rb: &RBatis) {
     let conn = rb.acquire().await.expect("connection database fail");
     let table = User {
         id: Some(Default::default()),
-        name: Some(Default::default()),
+        username: Some(Default::default()), 
+        nick_bame: Some(Default::default()),
     };
     let _ = RBatis::sync(&conn, mapper, &table, "t_user").await;
 }
@@ -44,11 +45,13 @@ pub async fn sync_tables_data(rb: &RBatis) {
     let users = vec![
         User {
             id: Some(0),
-            name: Some("admin".to_string()),
+            username: Some("admin".to_string()),
+            nick_bame: Some("admin".to_string()),
         },
         User {
             id: Some(1),
-            name: Some("user".to_string()),
+            username: Some("user".to_string()),
+            nick_bame: Some("user".to_string()), 
         },
     ];
     let _ = User::insert_batch(&conn, &users, users.len() as u64).await;

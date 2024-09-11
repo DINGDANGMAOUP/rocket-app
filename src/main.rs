@@ -1,5 +1,6 @@
 use platform_app::{config, controller::test_controller::{echo, hello, index, manual_hello}, domain};
 use actix_web::{middleware::Logger, web, App, HttpServer};
+use platform_app::middleware::filter::test_filter::SayHi;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let config = config::config::SystemConfig::default();
@@ -12,6 +13,7 @@ async fn main() -> std::io::Result<()> {
     let server_url = format!("{}:{}", url, port);
     HttpServer::new(move || {
         App::new()
+        .wrap(SayHi)
             .app_data(web::Data::new(config.clone()))
             .app_data(web::Data::new(rb.clone()))
             .wrap(Logger::default())

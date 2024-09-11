@@ -10,3 +10,4 @@ pub mod domain;
 pub mod mapper;
 pub mod pojo;
 pub mod service;
+pub mod  middleware;
