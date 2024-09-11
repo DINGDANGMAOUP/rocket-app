@@ -29,7 +29,11 @@ pub async fn sync_tables(rb: &RBatis) {
     let table = User {
         id: Some(Default::default()),
         username: Some(Default::default()), 
+        password: Some(Default::default()),
         nick_bame: Some(Default::default()),
+        phone: Some(Default::default()),
+        email: Some(Default::default()),
+        sex: Some(Default::default()),
     };
     let _ = RBatis::sync(&conn, mapper, &table, "t_user").await;
 }
@@ -46,12 +50,21 @@ pub async fn sync_tables_data(rb: &RBatis) {
         User {
             id: Some(0),
             username: Some("admin".to_string()),
+            password: Some("123456".to_string()),
             nick_bame: Some("admin".to_string()),
+            phone: Some("123456".to_string()),
+            email: Some("223@qw.com".to_string()),
+            sex: Some(1),
+
         },
         User {
             id: Some(1),
             username: Some("user".to_string()),
+            password: Some("123".to_string()),
             nick_bame: Some("user".to_string()), 
+            phone: Some("123".to_string()),
+            email: Some("".to_string()),
+            sex: Some(0),
         },
     ];
     let _ = User::insert_batch(&conn, &users, users.len() as u64).await;
