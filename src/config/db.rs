@@ -6,7 +6,7 @@ use crate::{config::config::SystemConfig, domain::intercept::logic_del_intercept
 
 pub async  fn init_db(config: &SystemConfig)-> RBatis {
     let rb = RBatis::new();
-    rb.init(rbdc_pg::driver::PgDriver {}, &config.app.datasource.url)
+    rb.link(rbdc_pg::driver::PgDriver {}, &config.app.datasource.url).await
         .unwrap();
     rb.intercepts.push(Arc::new(LogicDelIntercept {}));
     let pool = rb.get_pool().unwrap();

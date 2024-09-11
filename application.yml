@@ -12,7 +12,7 @@ app:
 
 logging:
   level: debug
-  dir: logs/
+  dir: logs/app.log
   rolling: day
   keepType: KeepNum(120)
   packCompress: gzip

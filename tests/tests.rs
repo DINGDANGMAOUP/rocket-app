@@ -1,9 +1,6 @@
 #[cfg(test)]
 mod tests {
     use actix_web::{http::header::ContentType, test, App};
-
-    use super::*;
-
     #[actix_web::test]
     async fn test_index_get() {
         let app = test::init_service(App::new()).await;
