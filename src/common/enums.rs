@@ -7,26 +7,26 @@ pub enum MenuType {
 }
 
 impl Default for MenuType {
-    fn default() -> Self {MenuType::Menu }
+    fn default() -> Self {
+        0.into()
+    }
 }
 
- 
-impl From<MenuType> for &str {
+impl From<MenuType> for i32 {
     fn from(arg: MenuType) -> Self {
         match arg {
-            MenuType::Button => "Button",
-            MenuType::Menu => "Menu",
+            MenuType::Menu => MenuType::Menu as i32,
+            MenuType::Button => MenuType::Button as i32,
         }
     }
 }
 
-impl From<&str> for MenuType {
-    fn from(arg: &str) -> Self {
+impl From<i32> for MenuType {
+    fn from(arg: i32) -> Self {
         match arg {
-            "" => MenuType::Button,
-            "Button" => MenuType::Button,
-            "Menu" => MenuType::Menu,
-            _ => MenuType::Button,
+            0 => MenuType::Menu,
+            1 => MenuType::Button,
+            _ => MenuType::Menu,
         }
     }
 }
@@ -34,35 +34,36 @@ impl From<&str> for MenuType {
 impl Debug for MenuType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Menu => write!(f, "Menu"),
-            Self::Button => write!(f, "Button"),
+            Self::Menu => write!(f, "0"),
+            Self::Button => write!(f, "1"),
         }
     }
 }
 
-impl Display for  MenuType {
+impl Display for MenuType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.write_str(match self {
-            Self::Menu => "Menu",
-            Self::Button => "Button",
+            Self::Menu => "0",
+            Self::Button => "1",
         })
-        
     }
 }
 
 impl Serialize for MenuType {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: serde::Serializer {
-            self.to_string().serialize(serializer)
+        S: serde::Serializer,
+    {
+        i32::from(self.clone()).serialize(serializer)
     }
 }
 
 impl<'de> Deserialize<'de> for MenuType {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de> {
-            let s = String::deserialize(deserializer)?;
-            Ok(MenuType::from(s.as_str()))
+        D: serde::Deserializer<'de>,
+    {
+        let s = i32::deserialize(deserializer).map(|x| MenuType::from(x))?;
+        Ok(s)
     }
 }

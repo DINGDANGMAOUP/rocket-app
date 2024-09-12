@@ -167,4 +167,29 @@ pub async fn sync_tables_data(rb: &RBatis) {
         },
     ];
     let _ = User::insert_batch(&conn, &users, users.len() as u64).await;
+
+   let menu= Menu{
+        common: CommonTable{
+            id: Some(0),
+            create_time: Some(Default::default()),
+            update_time: Some(Default::default()),
+            create_by: Some(Default::default()),
+            update_by: Some(Default::default()),
+            remark: Some(Default::default()),
+            del_flag: Some(Default::default()),
+        },
+        menu_name: Some("系统管理".to_string()),
+        parent_id: Some(0),
+        order_num: Some(0),
+        path:None,
+        component: Some("Layout".to_string()),
+        is_frame: Some(0),
+        is_cache: Some(0),
+        is_show: Some(1),
+        status: Some(1),
+        perms: Some("".to_string()),
+        icon: Some("".to_string()),
+        type_: Some(crate::common::enums::MenuType::Menu)
+    };
+    let _ = Menu::insert(&conn, &menu).await;
 }
