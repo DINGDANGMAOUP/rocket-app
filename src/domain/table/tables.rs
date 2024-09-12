@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-use crate::common::enums::MenuType;
-
 /// 公共字段
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct CommonTable {
@@ -70,7 +68,7 @@ pub struct Menu {
     pub status: Option<i32>,
     pub perms: Option<String>,
     pub icon: Option<String>,
-    pub m_type: Option<i32>,
+    pub type_: Option<i32>,
 }
 
 crud!(Menu {}, "t_menu");

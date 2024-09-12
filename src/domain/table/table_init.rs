@@ -97,7 +97,7 @@ pub async fn sync_tables(rb: &RBatis) {
         status: Some(Default::default()),
         perms: Some(Default::default()),
         icon: Some(Default::default()),
-        m_type: Some(Default::default()),
+        type_: Some(Default::default()),
     };
     let _ = RBatis::sync(&conn, mapper, &table, "t_menu").await;
 

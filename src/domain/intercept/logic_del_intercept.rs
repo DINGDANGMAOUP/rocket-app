@@ -5,20 +5,16 @@ use rbatis::Error;
 use rbs::Value;
 #[derive(Debug)]
 pub struct LogicDelIntercept;
-#[async_trait]
+#[async_trait] 
 impl Intercept for LogicDelIntercept {
     async fn before(
         &self,
-        task_id: i64,
+        _task_id: i64,
         _rb: &dyn Executor,
         sql: &mut String,
-        args: &mut Vec<Value>,
-        result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
+        _args: &mut Vec<Value>,
+        _result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
     ) -> Result<Option<bool>, Error> {
-        // println!("before task_id:{}", task_id);
-        // println!("before sql:{}", sql);
-        // println!("before args:{:?}", args);
-        // println!("before result:{:?}", result);
         //当前sql为delete，则修改为update 语句 del_flag = 1
         if sql.contains("delete") {
             *sql = sql.replace("delete", "update");
@@ -35,16 +31,12 @@ impl Intercept for LogicDelIntercept {
     }
     async fn after(
         &self,
-        task_id: i64,
+        _task_id: i64,
         _rb: &dyn Executor,
-        sql: &mut String,
-        args: &mut Vec<Value>,
-        result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
+        _sql: &mut String,
+        _args: &mut Vec<Value>,
+        _result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
     ) -> Result<Option<bool>, Error> {
-        // println!("after task_id:{}", task_id);
-        // println!("after sql:{}", sql);
-        // println!("after args:{:?}", args);
-        // println!("after result:{:?}", result);
         Ok(Some(true))
     }
 }
