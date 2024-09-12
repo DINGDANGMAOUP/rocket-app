@@ -1,9 +1,10 @@
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
+use crate::common::enums::MenuType;
 
-
-#[derive(Serialize, Deserialize,Clone,Debug)]
+/// 公共字段
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct CommonTable {
     pub id: Option<i32>,
     pub create_time: Option<String>,
@@ -14,9 +15,8 @@ pub struct CommonTable {
     pub del_flag: Option<i32>,
 }
 
-
-
-#[derive(Clone, Debug, Serialize, Deserialize,Validate)]
+/// 用户表
+#[derive(Clone, Debug, Serialize, Deserialize, Validate)]
 pub struct User {
     #[serde(flatten)]
     pub common: CommonTable,
@@ -31,3 +31,57 @@ pub struct User {
     pub sex: Option<i32>,
 }
 crud!(User {}, "t_user");
+
+/// 角色表
+#[derive(Clone, Debug, Serialize, Deserialize, Validate)]
+pub struct Role {
+    #[serde(flatten)]
+    pub common: CommonTable,
+    pub role_name: Option<String>,
+    pub authority: Option<String>,
+}
+
+crud!(Role {}, "t_role");
+
+/// 用户角色表
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct UserRole {
+    #[serde(flatten)]
+    pub common: CommonTable,
+    pub user_id: i32,
+    pub role_id: i32,
+}
+
+crud!(UserRole {}, "t_user_role");
+
+/// 菜单表
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Menu {
+    #[serde(flatten)]
+    pub common: CommonTable,
+    pub menu_name: Option<String>,
+    pub parent_id: Option<i32>,
+    pub order_num: Option<i32>,
+    pub path: Option<String>,
+    pub component: Option<String>,
+    pub is_frame: Option<i32>,
+    pub is_cache: Option<i32>,
+    pub is_show: Option<i32>,
+    pub status: Option<i32>,
+    pub perms: Option<String>,
+    pub icon: Option<String>,
+    pub m_type: Option<i32>,
+}
+
+crud!(Menu {}, "t_menu");
+
+/// 角色菜单表
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct RoleMenu {
+    #[serde(flatten)]
+    pub common: CommonTable,
+    pub role_id: i32,
+    pub menu_id: i32,
+}
+
+crud!(RoleMenu {}, "t_role_menu");

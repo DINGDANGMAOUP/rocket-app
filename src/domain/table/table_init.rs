@@ -1,4 +1,4 @@
-use crate::domain::table::tables::{CommonTable, User};
+use crate::domain::table::tables::{CommonTable, Menu, Role, RoleMenu, User, UserRole};
 use log::LevelFilter;
 use rbatis::dark_std::defer;
 use rbatis::intercept_log::LogInterceptor;
@@ -43,7 +43,82 @@ pub async fn sync_tables(rb: &RBatis) {
         email: Some(Default::default()),
         sex: Some(Default::default()),
     };
+
     let _ = RBatis::sync(&conn, mapper, &table, "t_user").await;
+
+    let table=Role{
+        common: CommonTable{
+            id: Some(Default::default()),
+            create_time: Some(Default::default()),
+            update_time: Some(Default::default()),
+            create_by: Some(Default::default()),
+            update_by: Some(Default::default()),
+            remark: Some(Default::default()),
+            del_flag: Some(Default::default()),
+        },
+        role_name: Some(Default::default()),
+        authority: Some(Default::default()),
+    };
+    let _ = RBatis::sync(&conn, mapper, &table, "t_role").await;
+
+    let table=UserRole{
+        common: CommonTable{
+            id: Some(Default::default()),
+            create_time: Some(Default::default()),
+            update_time: Some(Default::default()),
+            create_by: Some(Default::default()),
+            update_by: Some(Default::default()),
+            remark: Some(Default::default()),
+            del_flag: Some(Default::default()),
+        },
+        user_id: Default::default(),
+        role_id: Default::default(),
+    };
+    let _ = RBatis::sync(&conn, mapper, &table, "t_user_role").await;
+
+    let table=Menu{
+        common: CommonTable{
+            id: Some(Default::default()),
+            create_time: Some(Default::default()),
+            update_time: Some(Default::default()),
+            create_by: Some(Default::default()),
+            update_by: Some(Default::default()),
+            remark: Some(Default::default()),
+            del_flag: Some(Default::default()),
+        },
+        menu_name: Some(Default::default()),
+        parent_id: Some(Default::default()),
+        order_num: Some(Default::default()),
+        path: Some(Default::default()),
+        component: Some(Default::default()),
+        is_frame: Some(Default::default()),
+        is_cache: Some(Default::default()),
+        is_show: Some(Default::default()),
+        status: Some(Default::default()),
+        perms: Some(Default::default()),
+        icon: Some(Default::default()),
+        m_type: Some(Default::default()),
+    };
+    let _ = RBatis::sync(&conn, mapper, &table, "t_menu").await;
+
+    let table=RoleMenu{
+        common: CommonTable{
+            id: Some(Default::default()),
+            create_time: Some(Default::default()),
+            update_time: Some(Default::default()),
+            create_by: Some(Default::default()),
+            update_by: Some(Default::default()),
+            remark: Some(Default::default()),
+            del_flag: Some(Default::default()),
+        },
+        role_id: Default::default(),
+        menu_id: Default::default(),
+    };
+
+    let _ = RBatis::sync(&conn, mapper, &table, "t_role_menu").await;
+
+
+
 }
 
 pub async fn sync_tables_data(rb: &RBatis) {

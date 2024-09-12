@@ -15,10 +15,10 @@ impl Intercept for LogicDelIntercept {
         args: &mut Vec<Value>,
         result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
     ) -> Result<Option<bool>, Error> {
-        println!("before task_id:{}", task_id);
-        println!("before sql:{}", sql);
-        println!("before args:{:?}", args);
-        println!("before result:{:?}", result);
+        // println!("before task_id:{}", task_id);
+        // println!("before sql:{}", sql);
+        // println!("before args:{:?}", args);
+        // println!("before result:{:?}", result);
         //当前sql为delete，则修改为update 语句 del_flag = 1
         if sql.contains("delete") {
             *sql = sql.replace("delete", "update");
@@ -41,10 +41,10 @@ impl Intercept for LogicDelIntercept {
         args: &mut Vec<Value>,
         result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
     ) -> Result<Option<bool>, Error> {
-        println!("after task_id:{}", task_id);
-        println!("after sql:{}", sql);
-        println!("after args:{:?}", args);
-        println!("after result:{:?}", result);
+        // println!("after task_id:{}", task_id);
+        // println!("after sql:{}", sql);
+        // println!("after args:{:?}", args);
+        // println!("after result:{:?}", result);
         Ok(Some(true))
     }
 }
