@@ -1,0 +1,17 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=RustRover
+
+###
+
+POST localhost:8080/user
+Content-Type: application/json
+
+{
+  "username": "dingdangmaoup",
+  "password": "12345",
+  "nickName": "dingdingdangdang",
+  "phone": "17676887654",
+  "email": "asda@qq.com",
+  "sex": 1
+}

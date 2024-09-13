@@ -1,2 +1,6 @@
-[build]
-rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+#[build]
+#rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+[source.crates-io]
+replace-with = 'aliyun'
+[source.aliyun]
+registry = "sparse+https://mirrors.aliyun.com/crates.io-index/"

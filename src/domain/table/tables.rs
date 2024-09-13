@@ -1,20 +1,34 @@
+use rbatis::rbdc::DateTime;
+use rbatis::snowflake::new_snowflake_id;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-use crate::common::enums::MenuType;
+use crate::common::enums::menu_type::MenuType;
 
 /// 公共字段
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct CommonTable {
     pub id: Option<i32>,
-    pub create_time: Option<String>,
-    pub update_time: Option<String>,
+    pub create_time: Option<DateTime>,
+    pub update_time: Option<DateTime>,
     pub create_by: Option<String>,
     pub update_by: Option<String>,
     pub remark: Option<String>,
     pub del_flag: Option<i32>,
 }
-
+impl Default for CommonTable{
+    fn default() -> Self {
+       Self{
+           id: Some(new_snowflake_id() as i32),
+           create_time: Some(DateTime::now()) ,
+           update_time: Some(DateTime::now()),
+           create_by: None,
+           update_by: None,
+           remark: None,
+           del_flag: Some(0),
+       }
+    }
+}
 /// 用户表
 #[derive(Clone, Debug, Serialize, Deserialize, Validate)]
 pub struct User {
@@ -24,7 +38,7 @@ pub struct User {
     pub username: Option<String>,
     pub password: Option<String>,
     #[validate(length(min = 1, max = 20))]
-    pub nick_bame: Option<String>,
+    pub nick_name: Option<String>,
     pub phone: Option<String>,
     #[validate(email)]
     pub email: Option<String>,

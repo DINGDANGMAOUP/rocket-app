@@ -38,7 +38,7 @@ pub async fn sync_tables(rb: &RBatis) {
         },
         username: Some(Default::default()), 
         password: Some(Default::default()),
-        nick_bame: Some(Default::default()),
+        nick_name: Some(Default::default()),
         phone: Some(Default::default()),
         email: Some(Default::default()),
         sex: Some(Default::default()),
@@ -142,7 +142,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
             },
             username: Some("admin".to_string()),
             password: Some("123456".to_string()),
-            nick_bame: Some("admin".to_string()),
+            nick_name: Some("admin".to_string()),
             phone: Some("123456".to_string()),
             email: Some("223@qw.com".to_string()),
             sex: Some(1),
@@ -160,7 +160,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
             },
             username: Some("user".to_string()),
             password: Some("123".to_string()),
-            nick_bame: Some("user".to_string()), 
+            nick_name: Some("user".to_string()), 
             phone: Some("123".to_string()),
             email: Some("".to_string()),
             sex: Some(0),
@@ -189,7 +189,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
         status: Some(1),
         perms: Some("".to_string()),
         icon: Some("".to_string()),
-        type_: Some(crate::common::enums::MenuType::Menu)
+        type_: Some(crate::common::enums::menu_type::MenuType::Menu)
     };
     let _ = Menu::insert(&conn, &menu).await;
 }

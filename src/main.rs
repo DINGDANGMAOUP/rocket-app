@@ -1,5 +1,7 @@
-use platform_app::{config, controller::test_controller::{echo, hello, index, manual_hello}, domain};
-use actix_web::{middleware::Logger, web, App, HttpServer};
+use std::sync::Arc;
+use platform_app::{config, controller::test_controller::{echo, hello, index, manual_hello}, domain, controller::user_controller};
+use actix_files as fs;
+use actix_web::{ middleware::{Logger,Compress}, web, App, HttpServer};
 use platform_app::middleware::filter::test_filter::SayHi;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -14,11 +16,13 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
         .wrap(SayHi)
-            .app_data(web::Data::new(config.clone()))
-            .app_data(web::Data::new(rb.clone()))
-            .wrap(Logger::default())
+            .app_data(web::Data::new(Arc::new(config.clone())))
+            .app_data(web::Data::new(Arc::new(rb.clone())))
+            .wrap(Compress::default())
             .service(hello)
             .service(echo)
+            .service(fs::Files::new("/resource",".").show_files_listing().use_last_modified(true))
+            .service(web::scope("/user").route("",web::post().to(user_controller::create)))
             .route("/index", web::post().to(index))
             .route("/hey", web::get().to(manual_hello))
     })
