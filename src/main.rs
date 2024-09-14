@@ -3,8 +3,8 @@ use actix_web::{
     middleware::{Compress, Logger},
     web, App, HttpServer,
 };
-use actix_web_app::middleware::filter::test_filter::SayHi;
-use actix_web_app::{
+use rust_platform::middleware::filter::test_filter::SayHi;
+use rust_platform::{
     config,
     controller::test_controller::{index, manual_hello},
     controller::user_controller,

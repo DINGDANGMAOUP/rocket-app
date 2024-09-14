@@ -16,5 +16,5 @@ pub async  fn init_db(config: &SystemConfig)-> RBatis {
     pool.set_timeout(Some(Duration::from_secs(
         config.app.datasource.db_pool_timeout as u64,
     ))).await;
-    return rb;
+    rb
 }
