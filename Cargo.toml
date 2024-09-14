@@ -1,5 +1,5 @@
 [package]
-name = "actix-app"
+name = "rust-platform"
 version = "1.0.0"
 edition = "2021"
 
@@ -14,10 +14,10 @@ chrono="0.4.38"
 #rbatis deps
 rbs = { version = "4.5.18"}
 rbatis = { version = "4.5.30",features=["debug_mode"]}
-rbdc-pg={version="4.5.12"}
+rbdc-pg={version="4.5.13"}
 #log
 log = "0.4.22"
-fast_log ={version= "1.7.3",features = ["lz4", "zip", "gzip"]}
+fast_log ={version= "1.7.4",features = ["lz4", "zip", "gzip"]}
 
 validator = { version = "0.18.1", features = ["derive"] }
 failure = "0.1.8"

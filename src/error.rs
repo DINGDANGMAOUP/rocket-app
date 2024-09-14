@@ -1,6 +1,7 @@
-use actix_web::{HttpResponse,ResponseError};
-use failure::Fail;
+use crate::common::constants::http_code;
 use crate::response::ResponseErr;
+use actix_web::{HttpResponse, ResponseError};
+use failure::Fail;
 use rbatis::Error as RBError;
 use serde_json::{json, Value as JsonValue};
 use validator::ValidationErrors;
@@ -33,7 +34,7 @@ impl ResponseError for Error {
         match self {
             Error::Unauthorized(e) => HttpResponse::Unauthorized().json(ResponseErr {
                 success: false,
-                err_code: "401".to_string(),
+                err_code: String::from(http_code::UNAUTHORIZED),
                 err_message: Some(e.clone()),
             }),
             // Error::Forbidden(e) => HttpResponse::Forbidden().json(JsonErr {
@@ -47,13 +48,13 @@ impl ResponseError for Error {
             Error::UnprocessableEntity(e) => {
                 HttpResponse::UnprocessableEntity().json(ResponseErr {
                     success: false,
-                    err_code: "422".to_string(),
+                    err_code: String::from(http_code::UNPROCESSABLE),
                     err_message: Some(e.clone()),
                 })
             }
             Error::InternalServerError => HttpResponse::InternalServerError().json(ResponseErr {
                 success: false,
-                err_code: "500".to_string(),
+                err_code: String::from(http_code::INTERNAL_SERVER_ERROR),
                 err_message: Some(json!("Internal Server Error!".to_string())),
             }),
         }

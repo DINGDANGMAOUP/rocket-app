@@ -3,8 +3,8 @@ use actix_web::{
     middleware::{Compress, Logger},
     web, App, HttpServer,
 };
-use platform_app::middleware::filter::test_filter::SayHi;
-use platform_app::{
+use actix_web_app::middleware::filter::test_filter::SayHi;
+use actix_web_app::{
     config,
     controller::test_controller::{index, manual_hello},
     controller::user_controller,
@@ -20,7 +20,7 @@ async fn main() -> std::io::Result<()> {
     let url = &config.server.host;
     let port = &config.server.port;
     let server_url = format!("{}:{}", url, port);
-    
+
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(config.clone()))
@@ -31,7 +31,7 @@ async fn main() -> std::io::Result<()> {
             // .service(hello)
             // .service(echo)
             // .service(fs::Files::new("/resource",".").show_files_listing().use_last_modified(true))
-            .service(fs::Files::new("/ui", "./resource/dist").index_file("index.html"))
+            .service(fs::Files::new("/ui", "./resource").index_file("index.html"))
             .service(web::scope("/user").route("", web::post().to(user_controller::create)))
             .route("/index", web::post().to(index))
             .route("/hey", web::get().to(manual_hello))

@@ -3,26 +3,6 @@
 version = 3
 
 [[package]]
-name = "actix-app"
-version = "1.0.0"
-dependencies = [
- "actix-files",
- "actix-web",
- "chrono",
- "failure",
- "fast_log",
- "futures",
- "log",
- "rbatis",
- "rbdc-pg",
- "rbs",
- "serde",
- "serde_json",
- "serde_yml",
- "validator",
-]
-
-[[package]]
 name = "actix-codec"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -770,9 +750,9 @@ dependencies = [
 
 [[package]]
 name = "fast_log"
-version = "1.7.3"
+version = "1.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5fb4ef9b3db48f702dfa55a4d28e7c40280a81f4a2ace3e2d82577356fcaedba"
+checksum = "fa29f30d0a2ffaf0b1ff7f8a62b45755cb96882df195101c6cdbf880d1d1407a"
 dependencies = [
  "crossbeam",
  "crossbeam-channel",
@@ -782,7 +762,6 @@ dependencies = [
  "flate2",
  "log",
  "lz4_flex",
- "once_cell",
  "parking_lot",
  "zip",
 ]
@@ -1646,9 +1625,9 @@ dependencies = [
 
 [[package]]
 name = "rbdc-pg"
-version = "4.5.12"
+version = "4.5.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "548562d052108f671b27a4b1f25d1adf982f05531d08260d5200a23fa0a75c19"
+checksum = "1b7276e573093daeac0d2de4fb973f2474a44ffa5e21c1b652e8548e6a4ddb79"
 dependencies = [
  "atoi",
  "base64",
@@ -1781,6 +1760,26 @@ name = "rust-format"
 version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "60e7c00b6c3bf5e38a880eec01d7e829d12ca682079f8238a464def3c4b31627"
+
+[[package]]
+name = "rust-platform"
+version = "1.0.0"
+dependencies = [
+ "actix-files",
+ "actix-web",
+ "chrono",
+ "failure",
+ "fast_log",
+ "futures",
+ "log",
+ "rbatis",
+ "rbdc-pg",
+ "rbs",
+ "serde",
+ "serde_json",
+ "serde_yml",
+ "validator",
+]
 
 [[package]]
 name = "rustc-demangle"
