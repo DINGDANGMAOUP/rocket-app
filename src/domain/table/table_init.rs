@@ -1,4 +1,6 @@
-use crate::domain::table::tables::{CommonTable, Menu, Role, RoleMenu, User, UserRole};
+use crate::domain::table::tables::{
+    CommonTable, DictData, DictType, Menu, Role, RoleMenu, User, UserRole,
+};
 use log::LevelFilter;
 use rbatis::dark_std::defer;
 use rbatis::intercept_log::LogInterceptor;
@@ -26,17 +28,19 @@ pub async fn sync_tables(rb: &RBatis) {
         }
     };
     let conn = rb.acquire().await.expect("connection database fail");
+    //公共字段
+    let common = CommonTable {
+        id: Some(Default::default()),
+        create_time: Some(Default::default()),
+        update_time: Some(Default::default()),
+        create_by: Some(Default::default()),
+        update_by: Some(Default::default()),
+        remark: Some(Default::default()),
+        del_flag: Some(Default::default()),
+    };
     let table = User {
-        common: CommonTable{
-            id: Some(Default::default()),
-            create_time: Some(Default::default()),
-            update_time: Some(Default::default()),
-            create_by: Some(Default::default()),
-            update_by: Some(Default::default()),
-            remark: Some(Default::default()),
-            del_flag: Some(Default::default()),
-        },
-        username: Some(Default::default()), 
+        common: common.clone(),
+        username: Some(Default::default()),
         password: Some(Default::default()),
         nick_name: Some(Default::default()),
         phone: Some(Default::default()),
@@ -46,46 +50,22 @@ pub async fn sync_tables(rb: &RBatis) {
 
     let _ = RBatis::sync(&conn, mapper, &table, "t_user").await;
 
-    let table=Role{
-        common: CommonTable{
-            id: Some(Default::default()),
-            create_time: Some(Default::default()),
-            update_time: Some(Default::default()),
-            create_by: Some(Default::default()),
-            update_by: Some(Default::default()),
-            remark: Some(Default::default()),
-            del_flag: Some(Default::default()),
-        },
+    let table = Role {
+        common: common.clone(),
         role_name: Some(Default::default()),
         authority: Some(Default::default()),
     };
     let _ = RBatis::sync(&conn, mapper, &table, "t_role").await;
 
-    let table=UserRole{
-        common: CommonTable{
-            id: Some(Default::default()),
-            create_time: Some(Default::default()),
-            update_time: Some(Default::default()),
-            create_by: Some(Default::default()),
-            update_by: Some(Default::default()),
-            remark: Some(Default::default()),
-            del_flag: Some(Default::default()),
-        },
+    let table = UserRole {
+        common: common.clone(),
         user_id: Default::default(),
         role_id: Default::default(),
     };
     let _ = RBatis::sync(&conn, mapper, &table, "t_user_role").await;
 
-    let table=Menu{
-        common: CommonTable{
-            id: Some(Default::default()),
-            create_time: Some(Default::default()),
-            update_time: Some(Default::default()),
-            create_by: Some(Default::default()),
-            update_by: Some(Default::default()),
-            remark: Some(Default::default()),
-            del_flag: Some(Default::default()),
-        },
+    let table = Menu {
+        common: common.clone(),
         menu_name: Some(Default::default()),
         parent_id: Some(Default::default()),
         order_num: Some(Default::default()),
@@ -101,24 +81,30 @@ pub async fn sync_tables(rb: &RBatis) {
     };
     let _ = RBatis::sync(&conn, mapper, &table, "t_menu").await;
 
-    let table=RoleMenu{
-        common: CommonTable{
-            id: Some(Default::default()),
-            create_time: Some(Default::default()),
-            update_time: Some(Default::default()),
-            create_by: Some(Default::default()),
-            update_by: Some(Default::default()),
-            remark: Some(Default::default()),
-            del_flag: Some(Default::default()),
-        },
+    let table = RoleMenu {
+        common: common.clone(),
         role_id: Default::default(),
         menu_id: Default::default(),
     };
 
     let _ = RBatis::sync(&conn, mapper, &table, "t_role_menu").await;
 
+    let table = DictType {
+        common: common.clone(),
+        dict_name: None,
+        dict_type: None,
+        status: None,
+    };
+    let _ = RBatis::sync(&conn, mapper, &table, "t_dict_type").await;
 
-
+    let table = DictData {
+        common: common.clone(),
+        dict_type_id: None,
+        dict_label: None,
+        dict_value: None,
+        dict_sort: None,
+    };
+    let _ = RBatis::sync(&conn, mapper, &table, "t_dict_data").await;
 }
 
 pub async fn sync_tables_data(rb: &RBatis) {
@@ -131,65 +117,40 @@ pub async fn sync_tables_data(rb: &RBatis) {
     };
     let users = vec![
         User {
-            common: CommonTable{
-                id: Some(0),
-                create_time: Some(Default::default()),
-                update_time: Some(Default::default()),
-                create_by: Some(Default::default()),
-                update_by: Some(Default::default()),
-                remark: Some(Default::default()),
-                del_flag: Some(Default::default()),
-            },
+            common: Default::default(),
             username: Some("admin".to_string()),
             password: Some("123456".to_string()),
             nick_name: Some("admin".to_string()),
             phone: Some("123456".to_string()),
             email: Some("223@qw.com".to_string()),
             sex: Some(1),
-
         },
         User {
-            common: CommonTable{
-                id: Some(1),
-                create_time: Some(Default::default()),
-                update_time: Some(Default::default()),
-                create_by: Some(Default::default()),
-                update_by: Some(Default::default()),
-                remark: Some(Default::default()),
-                del_flag: Some(Default::default()),
-            },
+            common: Default::default(),
             username: Some("user".to_string()),
             password: Some("123".to_string()),
-            nick_name: Some("user".to_string()), 
+            nick_name: Some("user".to_string()),
             phone: Some("123".to_string()),
-            email: Some("".to_string()),
+            email: None,
             sex: Some(0),
         },
     ];
     let _ = User::insert_batch(&conn, &users, users.len() as u64).await;
 
-   let menu= Menu{
-        common: CommonTable{
-            id: Some(0),
-            create_time: Some(Default::default()),
-            update_time: Some(Default::default()),
-            create_by: Some(Default::default()),
-            update_by: Some(Default::default()),
-            remark: Some(Default::default()),
-            del_flag: Some(Default::default()),
-        },
+    let menu = Menu {
+        common: Default::default(),
         menu_name: Some("系统管理".to_string()),
         parent_id: Some(0),
         order_num: Some(0),
-        path:None,
+        path: None,
         component: Some("Layout".to_string()),
         is_frame: Some(0),
         is_cache: Some(0),
         is_show: Some(1),
         status: Some(1),
-        perms: Some("".to_string()),
-        icon: Some("".to_string()),
-        type_: Some(crate::common::enums::menu_type::MenuType::Menu)
+        perms: None,
+        icon: None,
+        type_: Some(crate::common::constants::menu_type::MenuType::Menu),
     };
     let _ = Menu::insert(&conn, &menu).await;
 }

@@ -1,14 +1,13 @@
 use rbatis::rbdc::DateTime;
-use rbatis::snowflake::new_snowflake_id;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-use crate::common::enums::menu_type::MenuType;
+use crate::common::constants::menu_type::MenuType;
 
 /// 公共字段
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct CommonTable {
-    pub id: Option<i32>,
+    pub id: Option<i64>,
     pub create_time: Option<DateTime>,
     pub update_time: Option<DateTime>,
     pub create_by: Option<String>,
@@ -16,17 +15,17 @@ pub struct CommonTable {
     pub remark: Option<String>,
     pub del_flag: Option<i32>,
 }
-impl Default for CommonTable{
+impl Default for CommonTable {
     fn default() -> Self {
-       Self{
-           id: Some(new_snowflake_id() as i32),
-           create_time: Some(DateTime::now()) ,
-           update_time: Some(DateTime::now()),
-           create_by: None,
-           update_by: None,
-           remark: None,
-           del_flag: Some(0),
-       }
+        Self {
+            id: None,
+            create_time: Some(DateTime::now()),
+            update_time: Some(DateTime::now()),
+            create_by: None,
+            update_by: None,
+            remark: None,
+            del_flag: Some(0),
+        }
     }
 }
 /// 用户表
@@ -99,3 +98,24 @@ pub struct RoleMenu {
 }
 
 crud!(RoleMenu {}, "t_role_menu");
+///字典表
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DictType {
+    #[serde(flatten)]
+   pub common: CommonTable,
+    pub dict_name: Option<String>,
+    pub dict_type: Option<String>,
+    pub status: Option<i32>,
+}
+crud!(DictType {}, "t_dict_type");
+///字典详情表
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DictData {
+    #[serde(flatten)]
+    pub common: CommonTable,
+    pub dict_type_id: Option<i32>,
+    pub dict_label: Option<String>,
+    pub dict_value: Option<String>,
+    pub dict_sort: Option<i32>,
+}
+crud!(DictData {}, "t_dict_data");

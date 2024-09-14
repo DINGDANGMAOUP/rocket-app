@@ -1,5 +1,5 @@
-use crate::common::enums::error::Error;
-use crate::pojo::dto::response::Response;
+use crate::error::Error;
+use crate::response::Response;
 use crate::pojo::request::user_request::UserCreateRequest;
 use crate::service::user_service;
 use actix_web::{web, HttpResponse};

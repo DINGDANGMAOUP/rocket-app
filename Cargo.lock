@@ -3,6 +3,26 @@
 version = 3
 
 [[package]]
+name = "actix-app"
+version = "1.0.0"
+dependencies = [
+ "actix-files",
+ "actix-web",
+ "chrono",
+ "failure",
+ "fast_log",
+ "futures",
+ "log",
+ "rbatis",
+ "rbdc-pg",
+ "rbs",
+ "serde",
+ "serde_json",
+ "serde_yml",
+ "validator",
+]
+
+[[package]]
 name = "actix-codec"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1454,26 +1474,6 @@ name = "pkg-config"
 version = "0.3.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d231b230927b5e4ad203db57bbcbee2802f6bce620b1e4a9024a07d94e2907ec"
-
-[[package]]
-name = "platform-app"
-version = "1.0.0"
-dependencies = [
- "actix-files",
- "actix-web",
- "chrono",
- "failure",
- "fast_log",
- "futures",
- "log",
- "rbatis",
- "rbdc-pg",
- "rbs",
- "serde",
- "serde_json",
- "serde_yml",
- "validator",
-]
 
 [[package]]
 name = "powerfmt"

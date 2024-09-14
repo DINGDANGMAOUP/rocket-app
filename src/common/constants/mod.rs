@@ -1,2 +1,2 @@
 pub mod menu_type;
-pub mod error;
+mod http_code;

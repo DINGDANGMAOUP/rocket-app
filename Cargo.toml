@@ -1,5 +1,5 @@
 [package]
-name = "platform-app"
+name = "actix-app"
 version = "1.0.0"
 edition = "2021"
 

@@ -1,7 +1,6 @@
-use crate::pojo;
 use actix_web::{HttpResponse,ResponseError};
 use failure::Fail;
-use pojo::dto::response::ResponseErr;
+use crate::response::ResponseErr;
 use rbatis::Error as RBError;
 use serde_json::{json, Value as JsonValue};
 use validator::ValidationErrors;
