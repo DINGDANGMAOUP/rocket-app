@@ -33,13 +33,10 @@ impl Default for CommonTable {
 pub struct User {
     #[serde(flatten)]
     pub common: CommonTable,
-    #[validate(length(min = 1, max = 20))]
     pub username: Option<String>,
     pub password: Option<String>,
-    #[validate(length(min = 1, max = 20))]
     pub nick_name: Option<String>,
     pub phone: Option<String>,
-    #[validate(email)]
     pub email: Option<String>,
     pub sex: Option<i32>,
 }

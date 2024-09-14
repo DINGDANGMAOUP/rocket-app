@@ -3,14 +3,15 @@ use validator::Validate;
 
 #[derive(Serialize,Deserialize,PartialEq,Debug,Clone,Validate)]
 pub struct UserCreateRequest {
-    #[validate(length(min = 1, max = 20,message ="username不符合规范"))]
+    #[validate(length(min = 1, max = 20,message ="username is invalid"))]
     pub username: Option<String>,
-    #[validate(length(min = 6,message="password不符合规范"))]
+    #[validate(length(min = 6,message="password is required"))]
     pub password: Option<String>,
-    #[validate(length(min = 1, max = 20,message="昵称有误"))]
+    #[validate(length(min = 1, max = 20,message="nick_name is invalid"))]
     pub nick_name: Option<String>,
     pub phone: Option<String>,
-    #[validate(email(message="请输入规范的邮箱"))]
+    #[validate(email(message="email is invalid"))]
     pub email: Option<String>,
+    #[validate(size(min=0,max=10,message="sex is invalid"))]
     pub sex: Option<i32>,
 }
