@@ -12,6 +12,6 @@ pub struct UserCreateRequest {
     pub phone: Option<String>,
     #[validate(email(message = "email is invalid"))]
     pub email: Option<String>,
-    // #[validate(size(min = 0, max = 10, message = "sex is invalid"))]
+    #[validate(range(min = 0,max=10,message = "sex is invalid"))]
     pub sex: Option<i32>,
 }
