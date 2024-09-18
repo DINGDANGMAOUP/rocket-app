@@ -5,7 +5,7 @@ use rbatis::Error;
 use rbs::Value;
 #[derive(Debug)]
 pub struct LogicDelIntercept;
-#[async_trait] 
+#[async_trait]
 impl Intercept for LogicDelIntercept {
     async fn before(
         &self,

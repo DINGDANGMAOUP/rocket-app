@@ -12,7 +12,7 @@ pub async fn create(rb: Data<RBatis>, data: &UserCreateRequest) {
         phone: data.phone.clone(),
         email: data.email.clone(),
         sex: data.sex.clone(),
+        enable: Some(true),
     };
-    User::insert(&**rb, &user)
-        .await.unwrap();
+    User::insert(&**rb, &user).await.unwrap();
 }

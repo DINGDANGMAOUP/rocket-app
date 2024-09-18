@@ -148,15 +148,12 @@ fn parse_log_level(arg: &str) -> log::LevelFilter {
     };
 }
 
-
 mod test {
-
-
 
     #[test]
     fn test_config() {
-    use fast_log::Config;
-    use log::Log;
+        use fast_log::Config;
+        use log::Log;
 
         fast_log::init(Config::new().file("logs/test.log").chan_len(Some(100000))).unwrap();
         log::info!("Commencing yak shaving{}", 0);

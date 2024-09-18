@@ -39,6 +39,7 @@ pub struct User {
     pub phone: Option<String>,
     pub email: Option<String>,
     pub sex: Option<i32>,
+    pub enable: Option<bool>,
 }
 crud!(User {}, "t_user");
 
@@ -99,7 +100,7 @@ crud!(RoleMenu {}, "t_role_menu");
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct DictType {
     #[serde(flatten)]
-   pub common: CommonTable,
+    pub common: CommonTable,
     pub dict_name: Option<String>,
     pub dict_type: Option<String>,
     pub status: Option<i32>,
