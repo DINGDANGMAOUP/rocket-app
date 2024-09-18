@@ -46,6 +46,7 @@ pub async fn sync_tables(rb: &RBatis) {
         phone: Some(Default::default()),
         email: Some(Default::default()),
         sex: Some(Default::default()),
+        enable: Some(Default::default()),
     };
 
     let _ = RBatis::sync(&conn, mapper, &table, "t_user").await;
@@ -124,6 +125,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
             phone: Some("123456".to_string()),
             email: Some("223@qw.com".to_string()),
             sex: Some(1),
+            enable: Some(true),
         },
         User {
             common: Default::default(),
@@ -133,6 +135,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
             phone: Some("123".to_string()),
             email: None,
             sex: Some(0),
+            enable: Some(true),
         },
     ];
     let _ = User::insert_batch(&conn, &users, users.len() as u64).await;
