@@ -7,6 +7,7 @@ use actix_web::{
     dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform},
     Error,
 };
+use serde_json::json;
 
 // There are two steps in middleware processing.
 // 1. Middleware initialization, middleware factory gets called with
@@ -58,8 +59,7 @@ where
 
         Box::pin(async move {
             let res = fut.await?;
-
-            println!("Hi from response. You response: {:?}",res);
+            println!("Hi from response");
             Ok(res)
         })
     }
