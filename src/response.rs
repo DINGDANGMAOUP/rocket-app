@@ -21,7 +21,7 @@ pub struct ResponsePage<T> {
     pub data: Option<T>,
     pub total: Option<u64>,
     pub page_size: Option<u64>,
-    pub page_No: Option<u64>,
+    pub page_no: Option<u64>,
 }
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -70,7 +70,7 @@ impl Response {
             data:Some(data),
             total:Some(total),
             page_size:Some(page_size),
-            page_No:Some(page_no),
+            page_no:Some(page_no),
         })
     }
 }
