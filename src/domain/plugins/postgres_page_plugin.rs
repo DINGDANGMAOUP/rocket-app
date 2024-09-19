@@ -15,17 +15,13 @@ impl Intercept for PostgresPagePlugin {
         _task_id: i64,
         _rb: &dyn Executor,
         sql: &mut String,
-        args: &mut Vec<Value>,
+        _args: &mut Vec<Value>,
         _result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
     ) -> Result<Option<bool>, Error> {
-        //正则匹配 替换mysql limit   为 pgsql limit offset 
-        println!("sql : {}",sql);
-        println!("args : {:?}",args);
-        let new_sql = self::convert_limit_to_offset(sql);
+        let new_sql = convert_limit_to_offset(sql);
         if new_sql.is_some() {
             *sql = new_sql.unwrap();
-            println!("sql : {}",sql);
-            return Ok(Some(true));
+            println!("PostgresPagePlugin => sql: {}",sql);
         }
         Ok(Some(true))
     }
@@ -44,7 +40,7 @@ fn convert_limit_to_offset(query: &str) -> Option<String> {
         let limit_num = caps.get(2).map_or("0", |m| m.as_str());
 
         // 构建新的查询语句，使用正确的OFFSET和LIMIT格式
-        let new_query = re.replace(query, |caps: &regex::Captures| {
+        let new_query = re.replace(query, |_caps: &regex::Captures| {
             format!("OFFSET {} LIMIT {}", offset_num, limit_num)
         }).into_owned();
 
