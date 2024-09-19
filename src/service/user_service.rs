@@ -1,10 +1,11 @@
-use crate::domain::table::user::{select_page_by_params, User};
+use crate::domain::table::user::{User};
 use crate::error::Error;
 use crate::pojo::dto::query::UserPageQuery;
 use crate::pojo::request::user_request::UserCreateRequest;
 use actix_web::web::Data;
 use rbatis::plugin::page::PageRequest;
 use rbatis::{Page, RBatis};
+use crate::mapper::user_mapper;
 
 pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
     let user = User {
@@ -20,7 +21,7 @@ pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
     User::insert(&***rb, &user).await.unwrap();
 }
 pub async fn pageList(rb: &Data<RBatis>, params: &UserPageQuery) -> Result<Page<User>, Error> {
-    let page = select_page_by_params(
+    let page = user_mapper::select_page_by_params(
         &***rb,
         &PageRequest::new(
             params.common.page_no.parse::<u64>().unwrap(),

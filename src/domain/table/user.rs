@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 use crate::domain::table::common_table::CommonTable;
-use crate::pojo::dto::query::UserPageQuery;
 
 //用户表
 #[derive(Clone, Debug, Serialize, Deserialize, Validate)]
@@ -17,4 +16,4 @@ pub struct User {
     pub enable: Option<bool>,
 }
 crud!(User {}, "t_user");
-htmlsql_select_page!(select_page_by_params(params:&UserPageQuery)->User=>"resource/sql/html/user.html");
+
