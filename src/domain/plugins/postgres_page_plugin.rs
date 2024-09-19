@@ -21,14 +21,11 @@ impl Intercept for PostgresPagePlugin {
         let new_sql = convert_limit_to_offset(sql);
         if new_sql.is_some() {
             *sql = new_sql.unwrap();
-            println!("PostgresPagePlugin => sql: {}",sql);
+            println!("PostgresPagePlugin => sql: {}", sql);
         }
         Ok(Some(true))
     }
-
 }
-
-
 
 fn convert_limit_to_offset(query: &str) -> Option<String> {
     // 不区分大小写的正则表达式，匹配LIMIT及其后的数字
@@ -40,9 +37,11 @@ fn convert_limit_to_offset(query: &str) -> Option<String> {
         let limit_num = caps.get(2).map_or("0", |m| m.as_str());
 
         // 构建新的查询语句，使用正确的OFFSET和LIMIT格式
-        let new_query = re.replace(query, |_caps: &regex::Captures| {
-            format!("OFFSET {} LIMIT {}", offset_num, limit_num)
-        }).into_owned();
+        let new_query = re
+            .replace(query, |_caps: &regex::Captures| {
+                format!("OFFSET {} LIMIT {}", offset_num, limit_num)
+            })
+            .into_owned();
 
         Some(new_query)
     } else {

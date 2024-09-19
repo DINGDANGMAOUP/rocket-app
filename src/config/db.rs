@@ -1,9 +1,13 @@
 use std::{sync::Arc, time::Duration};
 
-use rbatis::RBatis;
 use crate::{
-    config::config::SystemConfig, domain::plugins::{logic_del_plugin::LogicDelPlugin,returning_id_plugin::ReturningIdPlugin,postgres_page_plugin::PostgresPagePlugin},
+    config::config::SystemConfig,
+    domain::plugins::{
+        logic_del_plugin::LogicDelPlugin, postgres_page_plugin::PostgresPagePlugin,
+        returning_id_plugin::ReturningIdPlugin,
+    },
 };
+use rbatis::RBatis;
 
 pub async fn init_db(config: &SystemConfig) -> RBatis {
     let rb = RBatis::new();

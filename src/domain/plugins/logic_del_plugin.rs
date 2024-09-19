@@ -17,10 +17,14 @@ impl Intercept for LogicDelPlugin {
         _result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
     ) -> Result<Option<bool>, Error> {
         //当前sql为delete，则修改为update 语句 del_flag = 1,select时 添加del_flag=0条件  并且解决与offset ? limit ? 条件顺序语法错误
-        
+
         if sql.to_lowercase().starts_with("delete") {
-            *sql = sql.replace("delete", "update").replace(" set ", " set del_flag = 1 ");
-        } else if sql.to_lowercase().contains("select") && !sql.to_lowercase().contains("del_flag = 0") {
+            *sql = sql
+                .replace("delete", "update")
+                .replace(" set ", " set del_flag = 1 ");
+        } else if sql.to_lowercase().contains("select")
+            && !sql.to_lowercase().contains("del_flag = 0")
+        {
             if sql.contains("where") {
                 *sql = format!("{} and del_flag = 0", sql);
             } else {
@@ -28,8 +32,7 @@ impl Intercept for LogicDelPlugin {
             }
         }
 
-        
-        println!("LogicDelPlugin => sql: {}",sql);
+        println!("LogicDelPlugin => sql: {}", sql);
         Ok(Some(true))
     }
     // async fn after(

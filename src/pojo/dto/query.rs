@@ -1,20 +1,20 @@
 use serde::{Deserialize, Serialize};
-use validator::Validate;
 use serde_with::{serde_as, DisplayFromStr};
+use validator::Validate;
 
 pub const ASC: &str = "ASC";
 pub const DESC: &str = "DESC";
 const DEFAULT_PAGE_SIZE: u64 = 10;
 
-#[derive(Debug, Deserialize, Serialize, Validate, Clone,PartialEq)]
+#[derive(Debug, Deserialize, Serialize, Validate, Clone, PartialEq)]
 // #[serde_as]
 #[serde(rename_all = "camelCase")]
 pub struct PageQuery {
     // #[validate(range(min = 1, max = 100, message = "page_size is valid!"))]
-    #[serde(rename="pageSize",skip_serializing_if = "is_default")]
+    #[serde(rename = "pageSize", skip_serializing_if = "is_default")]
     pub page_size: String,
     // #[validate(range(min = 0, message = "page_size is invalid!"))]
-    #[serde(rename="pageIndex",skip_serializing_if = "is_default")]
+    #[serde(rename = "pageIndex", skip_serializing_if = "is_default")]
     // #[serde_as(as = "DisplayFromStr")]
     pub page_index: String,
     #[serde(rename = "orderBy", skip_serializing_if = "is_default")]
@@ -30,7 +30,7 @@ impl Default for PageQuery {
             page_size: "10".to_string(),
             page_index: "0".to_string(),
             order_by: None,
-            order_direction:Some(DESC.to_string()),
+            order_direction: Some(DESC.to_string()),
             group_by: None,
         }
     }

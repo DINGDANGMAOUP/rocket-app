@@ -32,8 +32,8 @@ pub async fn list(
     params: web::Query<UserPageQuery>,
 ) -> Result<HttpResponse, Error> {
     Validate::validate(&*params)?;
-    println!("params : {}",json!(&*params));
+    println!("params : {}", json!(&*params));
     let user_page = user_service::pageList(&rb, &*params).await?;
-    println!("page :{:?}",&user_page);
+    println!("page :{:?}", &user_page);
     Ok(Response::build_data(&user_page))
 }
