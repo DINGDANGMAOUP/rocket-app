@@ -15,7 +15,7 @@ pub struct Info {
 
 #[get("/")]
 pub async fn hello(rb: web::Data<RBatis>) -> impl Responder {
-    let users = domain::table::tables::User::select_all(&**rb)
+    let users = domain::table::user::User::select_all(&**rb)
         .await
         .unwrap();
     log::info!("users: {:?}", users);

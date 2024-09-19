@@ -1,2 +1,9 @@
 pub mod table_init;
-pub mod tables;
+pub mod common_table;
+pub mod user;
+pub mod role;
+pub mod user_role;
+pub mod menu;
+pub mod role_menu;
+pub mod dict;
+pub mod dict_detail;

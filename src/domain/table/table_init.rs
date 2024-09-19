@@ -1,6 +1,11 @@
-use crate::domain::table::tables::{
-    CommonTable, DictData, DictType, Menu, Role, RoleMenu, User, UserRole,
-};
+use crate::domain::table::common_table::CommonTable;
+use crate::domain::table::dict::Dict;
+use crate::domain::table::dict_detail::DictDetail;
+use crate::domain::table::menu::Menu;
+use crate::domain::table::role::Role;
+use crate::domain::table::role_menu::RoleMenu;
+use crate::domain::table::user::User;
+use crate::domain::table::user_role::UserRole;
 use log::LevelFilter;
 use rbatis::dark_std::defer;
 use rbatis::intercept_log::LogInterceptor;
@@ -8,6 +13,7 @@ use rbatis::table_sync::{
     ColumMapper, MssqlTableMapper, MysqlTableMapper, PGTableMapper, SqliteTableMapper,
 };
 use rbatis::RBatis;
+
 pub async fn sync_tables(rb: &RBatis) {
     //disable log
     let log_intercept = rb.get_intercept::<LogInterceptor>().unwrap();
@@ -90,7 +96,7 @@ pub async fn sync_tables(rb: &RBatis) {
 
     let _ = RBatis::sync(&conn, mapper, &table, "t_role_menu").await;
 
-    let table = DictType {
+    let table = Dict {
         common: common.clone(),
         dict_name: None,
         dict_type: None,
@@ -98,7 +104,7 @@ pub async fn sync_tables(rb: &RBatis) {
     };
     let _ = RBatis::sync(&conn, mapper, &table, "t_dict_type").await;
 
-    let table = DictData {
+    let table = DictDetail {
         common: common.clone(),
         dict_type_id: None,
         dict_label: None,
