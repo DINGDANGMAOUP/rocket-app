@@ -24,7 +24,7 @@ pub async fn pageList(rb: &Data<RBatis>, params: &UserPageQuery) -> Result<Page<
     let page = User::select_page_by_params(
         &***rb,
         &PageRequest::new(
-            params.common.page_index.parse::<u64>().unwrap(),
+            params.common.page_no.parse::<u64>().unwrap(),
             params.common.page_size.parse::<u64>().unwrap(),
         ),
         params,

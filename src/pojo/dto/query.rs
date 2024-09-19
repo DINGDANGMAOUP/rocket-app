@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use serde_with::{serde_as, DisplayFromStr};
 use validator::Validate;
 
 pub const ASC: &str = "ASC";
@@ -14,9 +13,9 @@ pub struct PageQuery {
     #[serde(rename = "pageSize", skip_serializing_if = "is_default")]
     pub page_size: String,
     // #[validate(range(min = 0, message = "page_size is invalid!"))]
-    #[serde(rename = "pageIndex", skip_serializing_if = "is_default")]
+    #[serde(rename = "pageNo", skip_serializing_if = "is_default")]
     // #[serde_as(as = "DisplayFromStr")]
-    pub page_index: String,
+    pub page_no: String,
     #[serde(rename = "orderBy", skip_serializing_if = "is_default")]
     pub order_by: Option<String>,
     #[serde(rename = "orderDirection", skip_serializing_if = "is_default")]
@@ -28,7 +27,7 @@ impl Default for PageQuery {
     fn default() -> Self {
         PageQuery {
             page_size: "10".to_string(),
-            page_index: "0".to_string(),
+            page_no: "0".to_string(),
             order_by: None,
             order_direction: Some(DESC.to_string()),
             group_by: None,

@@ -34,6 +34,5 @@ pub async fn list(
     Validate::validate(&*params)?;
     println!("params : {}", json!(&*params));
     let user_page = user_service::pageList(&rb, &*params).await?;
-    println!("page :{:?}", &user_page);
-    Ok(Response::build_data(&user_page))
+    Ok(Response::build_page(&user_page.records,user_page.total,user_page.page_no,user_page.page_size))
 }
