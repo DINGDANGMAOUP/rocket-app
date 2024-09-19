@@ -9,7 +9,7 @@ use validator::ValidationErrors;
 #[derive(Debug, Fail)]
 pub enum Error {
     //401
-    #[fail(display = "Unauthoried: {}", _0)]
+    #[fail(display = "Unauthorized: {}", _0)]
     Unauthorized(JsonValue),
 
     // //403
