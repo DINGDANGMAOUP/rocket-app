@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "https://raw.githubusercontent.com/rbatis/rbatis/master/rbatis-codegen/mybatis-3-mapper.dtd">
+<mapper>
+    <select id="select_page_by_params">
+        `select `
+        <if test="do_count == true">
+            `count(1)`
+        </if>
+        <if test="do_count == false">
+            `*`
+        </if>
+        ` from t_user`
+        <where>
+            <if test="params !=null">
+                <if test="params.id != null && params.id != ''">
+                    ` and id = #{params.id}`
+                </if>
+                <if test="params.username != null && params.username != ''">
+                    ` and username ~* #{params.username}`
+                </if>
+                <if test="params.nickName != null && params.nickName != ''">
+                    ` and nick_name ~* #{params.nickName}`
+                </if>
+                <if test="params.enable !=null && params.enable != ''">
+                    ` and enable = #{params.enable}`
+                </if>
+            </if>
+            <if test="do_count == false && params.orderBy !=null && params.orderBy != '' && params.orderDirection !=null && params.orderDirection != ''">
+                ` order by ${params.orderBy} ${params.orderDirection}`
+            </if>
+            <if test="do_count == false">
+                ` limit ${page_size} offset ${page_no}`
+            </if>
+        </where>
+    </select>
+</mapper>

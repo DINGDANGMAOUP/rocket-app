@@ -1,4 +1,4 @@
-use crate::domain::table::tables::User;
+use crate::domain::table::tables::{select_page_by_params_html, User};
 use crate::error::Error;
 use crate::pojo::dto::query::UserPageQuery;
 use crate::pojo::request::user_request::UserCreateRequest;
@@ -21,14 +21,15 @@ pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
 }
 //string_value.parse::<u32>().unwrap();
 pub async fn pageList(rb: &Data<RBatis>, params: &UserPageQuery) -> Result<Page<User>, Error> {
-    let page = User::select_page_by_params(
-        &***rb,
-        &PageRequest::new(
-            params.common.page_no.parse::<u64>().unwrap(),
-            params.common.page_size.parse::<u64>().unwrap(),
-        ),
-        params,
-    )
-    .await?;
+    // let page = User::select_page_by_params(
+    //     &***rb,
+    //     &PageRequest::new(
+    //         params.common.page_no.parse::<u64>().unwrap(),
+    //         params.common.page_size.parse::<u64>().unwrap(),
+    //     ),
+    //     params,
+    // )
+    // .await?;
+    let page =select_page_by_params_html(&***rb,&PageRequest::new(params.common.page_no.parse::<u64>().unwrap(),params.common.page_size.parse::<u64>().unwrap()),params).await?;
     Ok(page)
 }

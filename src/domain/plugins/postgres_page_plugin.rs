@@ -18,6 +18,7 @@ impl Intercept for PostgresPagePlugin {
         _args: &mut Vec<Value>,
         _result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
     ) -> Result<Option<bool>, Error> {
+        println!("PostgresPagePlugin => sql: {}", sql);
         let new_sql = convert_limit_to_offset(sql);
         if new_sql.is_some() {
             *sql = new_sql.unwrap();

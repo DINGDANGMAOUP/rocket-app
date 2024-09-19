@@ -3,7 +3,6 @@ use std::{sync::Arc, time::Duration};
 use crate::{
     config::config::SystemConfig,
     domain::plugins::{
-        logic_del_plugin::LogicDelPlugin, postgres_page_plugin::PostgresPagePlugin,
         returning_id_plugin::ReturningIdPlugin,
     },
 };
@@ -15,7 +14,6 @@ pub async fn init_db(config: &SystemConfig) -> RBatis {
         .await
         .unwrap();
     rb.intercepts.push(Arc::new(ReturningIdPlugin {}));
-    rb.intercepts.push(Arc::new(PostgresPagePlugin {}));
     // rb.intercepts.push(Arc::new(LogicDelPlugin {}));
     let pool = rb.get_pool().unwrap();
     //max connections
