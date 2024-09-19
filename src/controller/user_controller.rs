@@ -1,9 +1,9 @@
 use crate::error::Error;
-use crate::pojo::dto::query::UserPageQuery;
-use crate::pojo::request::user_request::UserCreateRequest;
+use crate::common::pojo::dto::request::query::UserPageQuery;
+use crate::common::pojo::dto::request::user_request::UserCreateRequest;
 use crate::response::Response;
 use crate::service::user_service;
-use actix_web::{get, post, web, HttpRequest, HttpResponse};
+use actix_web::{ web, HttpResponse};
 use rbatis::RBatis;
 use serde_json::json;
 use validator::Validate;

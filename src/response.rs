@@ -9,7 +9,9 @@ pub struct Response;
 pub struct ResponseData<T> {
     pub success: bool,
     pub err_code: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub err_message: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data: Option<T>,
 }
 #[derive(Serialize, Deserialize, Debug)]
@@ -17,10 +19,15 @@ pub struct ResponseData<T> {
 pub struct ResponsePage<T> {
     pub success: bool,
     pub err_code: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub err_message: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data: Option<T>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub total: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub page_size: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub page_no: Option<u64>,
 }
 #[derive(Serialize, Deserialize, Debug)]
@@ -28,13 +35,17 @@ pub struct ResponsePage<T> {
 pub struct ResponseDesc {
     pub success: bool,
     pub err_code: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub err_message: Option<String>,
 }
+
+
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ResponseErr<T: ser::Serialize> {
     pub success: bool,
     pub err_code: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub err_message: Option<T>,
 }
 

@@ -1,7 +1,7 @@
 use crate::domain::table::user::{User};
 use crate::error::Error;
-use crate::pojo::dto::query::UserPageQuery;
-use crate::pojo::request::user_request::UserCreateRequest;
+use crate::common::pojo::dto::request::query::UserPageQuery;
+use crate::common::pojo::dto::request::user_request::UserCreateRequest;
 use actix_web::web::Data;
 use rbatis::plugin::page::PageRequest;
 use rbatis::{Page, RBatis};
