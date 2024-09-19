@@ -1,2 +1,2 @@
-pub mod intercept;
+pub mod plugins;
 pub mod table;

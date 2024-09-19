@@ -3,8 +3,9 @@ use crate::pojo::dto::query::UserPageQuery;
 use crate::pojo::request::user_request::UserCreateRequest;
 use crate::response::Response;
 use crate::service::user_service;
-use actix_web::{web, HttpResponse};
+use actix_web::{get, post, web, HttpRequest, HttpResponse};
 use rbatis::RBatis;
+use serde_json::json;
 use validator::Validate;
 
 /**
@@ -22,13 +23,17 @@ pub async fn create(
     data: web::Json<UserCreateRequest>,
 ) -> Result<HttpResponse, Error> {
     Validate::validate(&data.clone())?;
-    user_service::create(rb, &*data).await;
+    user_service::create(&rb, &*data).await;
     Ok(Response::build_success())
 }
 ///查询用户列表
 pub async fn list(
-    _rb: web::Data<RBatis>,
+    rb: web::Data<RBatis>,
     params: web::Query<UserPageQuery>,
 ) -> Result<HttpResponse, Error> {
-    Ok(Response::build_success())
+    Validate::validate(&*params)?;
+    println!("params : {}",json!(&*params));
+    let user_page = user_service::pageList(&rb, &*params).await?;
+    println!("page :{:?}",&user_page);
+    Ok(Response::build_data(&user_page))
 }

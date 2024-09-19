@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use validator::Validate;
 
 use crate::common::constants::menu_type::MenuType;
+use crate::pojo::dto::query::UserPageQuery;
 
 /// 公共字段
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -42,6 +43,24 @@ pub struct User {
     pub enable: Option<bool>,
 }
 crud!(User {}, "t_user");
+/*
+impl_select_page!(BizActivity{select_page_by_name(name:&str) =>"
+     if name != null && name != '':
+       `where name != #{name}`
+     if name == '':
+       `where name != ''`"});
+ */
+impl_select_page!(User{select_page_by_params(params:&UserPageQuery)=>r#"
+if params != null && params.id != null && params.id != '':
+    `where id = #{params.id}`
+if params != null && params.username != null && params.username != '' :
+    `where username ~* #{params.username}`
+if params != null && params.nick_name != null && params.nick_name != '':    
+    `where nick_name ~* #{params.nick_name}`
+if params != null && params.enable !=null && params.enable != '':
+    `where nick_name = #{params.enable}`   
+       
+"#},"t_user");
 
 /// 角色表
 #[derive(Clone, Debug, Serialize, Deserialize, Validate)]

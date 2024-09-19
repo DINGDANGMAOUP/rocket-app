@@ -4,9 +4,9 @@ use rbatis::rbdc::db::ExecResult;
 use rbatis::Error;
 use rbs::Value;
 #[derive(Debug)]
-pub struct LogicDelIntercept;
+pub struct LogicDelPlugin;
 #[async_trait]
-impl Intercept for LogicDelIntercept {
+impl Intercept for LogicDelPlugin {
     async fn before(
         &self,
         _task_id: i64,
@@ -16,13 +16,15 @@ impl Intercept for LogicDelIntercept {
         _result: ResultType<&mut Result<ExecResult, Error>, &mut Result<Vec<Value>, Error>>,
     ) -> Result<Option<bool>, Error> {
         //当前sql为delete，则修改为update 语句 del_flag = 1
-        if sql.contains("delete") {
+        if sql.contains("delete")&& !sql.contains("del_flag = 1") {
             *sql = sql.replace("delete", "update");
             sql.push_str(" set del_flag = 1");
         } else if sql.contains("select") {
             //当前sql为select，添加过滤条件 del_flag = 0
-            if sql.contains("where") {
-                sql.push_str(" and del_flag = 0");
+            if sql.contains("where"){
+                if !sql.contains("del_flag = 0") {
+                    sql.push_str(" and del_flag = 0");
+                }
             } else {
                 sql.push_str(" where del_flag = 0");
             }
