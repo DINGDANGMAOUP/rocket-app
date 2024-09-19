@@ -39,7 +39,6 @@ pub struct ResponseDesc {
     pub err_message: Option<String>,
 }
 
-
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ResponseErr<T: ser::Serialize> {
@@ -73,15 +72,20 @@ impl Response {
             data: Some(data),
         })
     }
-    pub fn build_page<T:ser::Serialize>(data:&T,total:u64,page_size:u64,page_no:u64)->HttpResponse{
-        HttpResponse::Ok().json(ResponsePage{
-            success:true,
-            err_code:String::from(http_code::SUCCESS),
-            err_message:None,
-            data:Some(data),
-            total:Some(total),
-            page_size:Some(page_size),
-            page_no:Some(page_no),
+    pub fn build_page<T: ser::Serialize>(
+        data: &T,
+        total: u64,
+        page_size: u64,
+        page_no: u64,
+    ) -> HttpResponse {
+        HttpResponse::Ok().json(ResponsePage {
+            success: true,
+            err_code: String::from(http_code::SUCCESS),
+            err_message: None,
+            data: Some(data),
+            total: Some(total),
+            page_size: Some(page_size),
+            page_no: Some(page_no),
         })
     }
 }

@@ -1,6 +1,6 @@
+use crate::domain::table::common_table::CommonTable;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use crate::domain::table::common_table::CommonTable;
 
 //用户表
 #[derive(Clone, Debug, Serialize, Deserialize, Validate)]
@@ -16,4 +16,3 @@ pub struct User {
     pub enable: Option<bool>,
 }
 crud!(User {}, "t_user");
-

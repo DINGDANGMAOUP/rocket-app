@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
 use crate::common::constants::menu_type::MenuType;
 use crate::domain::table::common_table::CommonTable;
+use serde::{Deserialize, Serialize};
 
 /// 菜单表
 #[derive(Clone, Debug, Serialize, Deserialize)]

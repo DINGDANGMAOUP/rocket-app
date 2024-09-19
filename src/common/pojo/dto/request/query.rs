@@ -11,7 +11,6 @@ pub struct PageQuery {
     pub group_by: Option<String>,
 }
 
-
 #[derive(Debug, Deserialize, Serialize, Validate, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct UserPageQuery {

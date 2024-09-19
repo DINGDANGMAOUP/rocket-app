@@ -1,6 +1,6 @@
+use crate::domain::table::common_table::CommonTable;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
-use crate::domain::table::common_table::CommonTable;
 
 /// 角色表
 #[derive(Clone, Debug, Serialize, Deserialize, Validate)]

@@ -1,11 +1,11 @@
-use crate::domain::table::user::{User};
-use crate::error::Error;
 use crate::common::pojo::dto::request::query::UserPageQuery;
 use crate::common::pojo::dto::request::user_request::UserCreateRequest;
+use crate::domain::table::user::User;
+use crate::error::Error;
+use crate::mapper::user_mapper;
 use actix_web::web::Data;
 use rbatis::plugin::page::PageRequest;
 use rbatis::{Page, RBatis};
-use crate::mapper::user_mapper;
 
 pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
     let user = User {
@@ -20,7 +20,7 @@ pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
     };
     User::insert(&***rb, &user).await.unwrap();
 }
-pub async fn pageList(rb: &Data<RBatis>, params: &UserPageQuery) -> Result<Page<User>, Error> {
+pub async fn page_list(rb: &Data<RBatis>, params: &UserPageQuery) -> Result<Page<User>, Error> {
     let page = user_mapper::select_page_by_params(
         &***rb,
         &PageRequest::new(

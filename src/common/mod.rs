@@ -1,4 +1,4 @@
 pub mod constants;
 pub mod plugins;
-pub mod utils;
 pub mod pojo;
+pub mod utils;

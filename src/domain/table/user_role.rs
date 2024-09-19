@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::domain::table::common_table::CommonTable;
+use serde::{Deserialize, Serialize};
 
 /// 用户角色表
 #[derive(Clone, Debug, Serialize, Deserialize)]

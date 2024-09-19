@@ -1,9 +1,9 @@
-use crate::error::Error;
 use crate::common::pojo::dto::request::query::UserPageQuery;
 use crate::common::pojo::dto::request::user_request::UserCreateRequest;
+use crate::error::Error;
 use crate::response::Response;
 use crate::service::user_service;
-use actix_web::{ web, HttpResponse};
+use actix_web::{web, HttpResponse};
 use rbatis::RBatis;
 use serde_json::json;
 use validator::Validate;
@@ -33,6 +33,11 @@ pub async fn list(
 ) -> Result<HttpResponse, Error> {
     Validate::validate(&*params)?;
     println!("params : {}", json!(&*params));
-    let user_page = user_service::pageList(&rb, &*params).await?;
-    Ok(Response::build_page(&user_page.records,user_page.total,user_page.page_no,user_page.page_size))
+    let user_page = user_service::page_list(&rb, &*params).await?;
+    Ok(Response::build_page(
+        &user_page.records,
+        user_page.total,
+        user_page.page_no,
+        user_page.page_size,
+    ))
 }
