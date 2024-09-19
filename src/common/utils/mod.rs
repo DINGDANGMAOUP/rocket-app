@@ -1,1 +1,1 @@
-mod resource;
+pub mod resource;

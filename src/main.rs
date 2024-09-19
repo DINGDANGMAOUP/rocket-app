@@ -1,4 +1,3 @@
-use actix_files as fs;
 use actix_web::{
     middleware::{Compress, Logger},
     web, App, HttpServer,
@@ -6,11 +5,9 @@ use actix_web::{
 use rust_platform::middleware::filter::test_filter::SayHi;
 use rust_platform::{
     config,
-    controller::test_controller::{index, manual_hello},
-    controller::user_controller,
+    controller::{index_controller, user_controller},
     domain,
 };
-use std::sync::Arc;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -29,17 +26,18 @@ async fn main() -> std::io::Result<()> {
             .wrap(SayHi)
             .wrap(Logger::default())
             .wrap(Compress::default())
-            // .service(hello)
-            // .service(echo)
-            // .service(fs::Files::new("/resource",".").show_files_listing().use_last_modified(true))
-            .service(fs::Files::new("/ui", "./resource").index_file("index.html"))
+            .service(
+                web::scope("/ui")
+                    .route("", web::get().to(index_controller::index))
+                    .route("/{_:.*}", web::get().to(index_controller::dist)),
+            )
             .service(
                 web::scope("/user")
                     .route("", web::post().to(user_controller::create))
                     .route("", web::get().to(user_controller::list)),
             )
-            .route("/index", web::post().to(index))
-            .route("/hey", web::get().to(manual_hello))
+        // .route("/index", web::post().to(index))
+        // .route("/hey", web::get().to(manual_hello))
     })
     .bind(&server_url)?
     .run()
