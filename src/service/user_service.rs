@@ -23,10 +23,7 @@ pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
 pub async fn page_list(rb: &Data<RBatis>, params: &UserPageQuery) -> Result<Page<User>, Error> {
     let page = user_mapper::select_page_by_params(
         &***rb,
-        &PageRequest::new(
-            params.common.page_no.parse::<u64>().unwrap(),
-            params.common.page_size.parse::<u64>().unwrap(),
-        ),
+        &PageRequest::new(params.common.page_no, params.common.page_size),
         params,
     )
     .await?;

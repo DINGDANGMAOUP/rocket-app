@@ -31,13 +31,14 @@ pub async fn list(
     rb: web::Data<RBatis>,
     params: web::Query<UserPageQuery>,
 ) -> Result<HttpResponse, Error> {
-    Validate::validate(&*params)?;
+    Validate::validate(&*params.clone())?;
+    Validate::validate(&params.common.clone())?;
     println!("params : {}", json!(&*params));
     let user_page = user_service::page_list(&rb, &*params).await?;
     Ok(Response::build_page(
         &user_page.records,
         user_page.total,
-        user_page.page_no,
         user_page.page_size,
+        user_page.page_no,
     ))
 }
