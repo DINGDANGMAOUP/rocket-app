@@ -79,3 +79,4 @@ impl From<RBError> for Error {
         Error::UnprocessableEntity(json!(e.to_string()))
     }
 }
+
