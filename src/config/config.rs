@@ -1,5 +1,4 @@
-use std::{fs::File, io::Read};
-
+use lazy_static::lazy_static;
 use crate::common::utils::resource::load_config;
 use rbs::to_value;
 use serde::{Deserialize, Serialize};
@@ -37,14 +36,21 @@ pub struct LogConfig {
 #[serde(rename_all = "camelCase")]
 pub struct Datasource {
     pub url: String,
-    pub db_pool_len: usize,
-    pub db_pool_timeout: usize,
+    pub db_pool_len: u64,
+    pub db_pool_timeout: u64,
+}
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SecurityConfig {
+    pub white_list: Vec<String>,
+    pub secret: String,
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct AppConfig {
     pub debug: bool,
     pub datasource: Datasource,
+    pub security: SecurityConfig,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -83,7 +89,9 @@ impl Default for SystemConfig {
         result
     }
 }
-
+lazy_static!(
+    pub static ref SYSTEM_CONFIG: SystemConfig = SystemConfig::default();
+);
 mod test {
 
     #[test]

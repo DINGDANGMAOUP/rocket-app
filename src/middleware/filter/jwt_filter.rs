@@ -1,9 +1,10 @@
 use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
-use actix_web::Error;
-use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
-use std::collections::{HashMap, HashSet};
+use actix_web::{ Error};
+use jsonwebtoken::{decode, DecodingKey, Validation};
+use std::collections::HashMap;
 use std::future::{ready, Future, Ready};
 use std::pin::Pin;
+use crate::config::config::{SYSTEM_CONFIG};
 
 pub struct JWTFilter;
 
@@ -40,13 +41,28 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        println!("Hi from start. You requested: {}", req.path());
-        println!("Hi from start. You requested: {:?}", req);
+        log::info!("Hi from start. You requested: {:?}", req);
+        let config= &SYSTEM_CONFIG;
+        let security_config = config.app.security.clone();
+        //判断是否白名单 如果是白名单则直接放行
+        let white_list = security_config.white_list.clone();
+        let path = req.path();
+        let mut is_white = false;
+        for white in white_list {
+            if path.starts_with(&white) {
+                is_white = true;
+                break;
+            }
+        }
+        if is_white {
+            return Box::pin(self.service.call(req));
+        }
+
         let headers = req.headers();
         let token = headers.get("Authorization").unwrap();
-        println!("header :{:?}", token);
+        log::info!("header :{:?}", token);
         let tk = token.to_str().unwrap().replace("Bearer ", "");
-        println!("tk :{}", tk);
+        log::info!("tk :{}", tk);
         let validation = {
             let mut validation = Validation::default();
             validation.validate_exp = false;
@@ -56,14 +72,14 @@ where
         };
         let token = decode::<HashMap<String, serde_json::Value>>(
             &tk,
-            &DecodingKey::from_secret("tooltt".as_ref()),
+            &DecodingKey::from_secret(security_config.secret.as_ref()),
             &validation,
         );
-        println!("token:{:?}", token);
+        log::info!("token:{:?}", token);
         let fut = self.service.call(req);
         Box::pin(async move {
             let res = fut.await?;
-            println!("Hi from response");
+            log::info!("Hi from response");
             Ok(res)
         })
     }

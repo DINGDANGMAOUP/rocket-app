@@ -1,7 +1,6 @@
 use std::{sync::Arc, time::Duration};
-
 use crate::common::plugins::returning_id_plugin::ReturningIdPlugin;
-use crate::config::config::SystemConfig;
+use crate::config::config::{SystemConfig};
 use rbatis::RBatis;
 
 pub async fn init_db(config: &SystemConfig) -> RBatis {
@@ -13,11 +12,11 @@ pub async fn init_db(config: &SystemConfig) -> RBatis {
     // rb.intercepts.push(Arc::new(LogicDelPlugin {}));
     let pool = rb.get_pool().unwrap();
     //max connections
-    pool.set_max_open_conns(config.app.datasource.db_pool_len as u64)
+    pool.set_max_open_conns(config.app.datasource.db_pool_len)
         .await;
     //max timeout
     pool.set_timeout(Some(Duration::from_secs(
-        config.app.datasource.db_pool_timeout as u64,
+        config.app.datasource.db_pool_timeout,
     )))
     .await;
     rb

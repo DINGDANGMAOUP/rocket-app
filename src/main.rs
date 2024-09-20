@@ -3,16 +3,16 @@ use actix_web::{
     web, App, HttpServer,
 };
 use rust_platform::middleware::filter::jwt_filter::JWTFilter;
-use rust_platform::middleware::filter::test_filter::SayHi;
 use rust_platform::{
     config,
     controller::{index_controller, user_controller},
     domain,
 };
+use rust_platform::config::config::SYSTEM_CONFIG;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let config = config::config::SystemConfig::default();
+    let config = &SYSTEM_CONFIG;
     config::log::init_log(&config);
     let rb = config::db::init_db(&config).await;
     domain::table::table_init::sync_tables(&rb).await;
@@ -24,9 +24,9 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(config.to_owned()))
             .app_data(web::Data::new(rb.to_owned()))
-            .wrap(JWTFilter)
             .wrap(Logger::default())
             .wrap(Compress::default())
+            .wrap(JWTFilter)
             .service(
                 web::scope("/ui")
                     .route("", web::get().to(index_controller::index))
