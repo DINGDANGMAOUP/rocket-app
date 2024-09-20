@@ -1,3 +1,4 @@
+use crate::error::Error;
 use crate::response::ResponseErr;
 use actix_web::HttpResponse;
 use mime_guess::from_path;
@@ -17,5 +18,15 @@ pub fn handle_web_file(path: &str) -> HttpResponse {
             err_code: "404".to_string(),
             err_message: Some("Not Found".to_string()),
         }),
+    }
+}
+
+pub fn load_config() -> Result<String, Error> {
+    match Asset::get("application.yml") {
+        Some(content) => {
+            let content = String::from_utf8(content.data.into_owned()).unwrap();
+            Ok(content)
+        }
+        None => Err(Error::InternalServerError),
     }
 }

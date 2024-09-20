@@ -8,6 +8,7 @@ use rust_platform::{
     controller::{index_controller, user_controller},
     domain,
 };
+use rust_platform::middleware::filter::jwt_filter::JWTFilter;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -23,7 +24,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(config.to_owned()))
             .app_data(web::Data::new(rb.to_owned()))
-            .wrap(SayHi)
+            .wrap(JWTFilter)
             .wrap(Logger::default())
             .wrap(Compress::default())
             .service(

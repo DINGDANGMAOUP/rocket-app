@@ -1,2 +1,2 @@
-mod jwt_filter;
+pub mod jwt_filter;
 pub mod test_filter;

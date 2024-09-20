@@ -2,6 +2,7 @@ use std::{fs::File, io::Read};
 
 use rbs::to_value;
 use serde::{Deserialize, Serialize};
+use crate::common::utils::resource::load_config;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -56,10 +57,11 @@ pub struct SystemConfig {
 
 impl Default for SystemConfig {
     fn default() -> Self {
-        let mut f = File::open("application.yml").expect("not find 'application.yml'");
-        let mut cfg_data = "".to_string();
-        f.read_to_string(&mut cfg_data)
-            .expect("read 'application.yml' fail");
+        // let mut f = File::open("application.yml").expect("not find 'application.yml'");
+        // let mut cfg_data = "".to_string();
+        // f.read_to_string(&mut cfg_data)
+        //     .expect("read 'application.yml' fail");
+       let cfg_data= load_config().expect("read 'application.yml' fail");
         //load config
         let mut result: SystemConfig =
             serde_yml::from_str(&cfg_data).expect("load config file fail");
