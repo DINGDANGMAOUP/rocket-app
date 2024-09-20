@@ -1,7 +1,7 @@
-use std::collections::{HashMap, HashSet};
 use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
 use actix_web::Error;
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
+use std::collections::{HashMap, HashSet};
 use std::future::{ready, Future, Ready};
 use std::pin::Pin;
 
@@ -44,18 +44,22 @@ where
         println!("Hi from start. You requested: {:?}", req);
         let headers = req.headers();
         let token = headers.get("Authorization").unwrap();
-        println!("header :{:?}",token);
-        let tk = token.to_str().unwrap().replace("Bearer ","");
-        println!("tk :{}",tk);
+        println!("header :{:?}", token);
+        let tk = token.to_str().unwrap().replace("Bearer ", "");
+        println!("tk :{}", tk);
         let validation = {
             let mut validation = Validation::default();
             validation.validate_exp = false;
-            validation.validate_aud=false;
-            validation.validate_nbf=false;
+            validation.validate_aud = false;
+            validation.validate_nbf = false;
             validation
         };
-        let token = decode::<HashMap<String, serde_json::Value>>(&tk, &DecodingKey::from_secret("tooltt".as_ref()), &validation);
-        println!("token:{:?}",token);
+        let token = decode::<HashMap<String, serde_json::Value>>(
+            &tk,
+            &DecodingKey::from_secret("tooltt".as_ref()),
+            &validation,
+        );
+        println!("token:{:?}", token);
         let fut = self.service.call(req);
         Box::pin(async move {
             let res = fut.await?;

@@ -1,8 +1,8 @@
 use std::{fs::File, io::Read};
 
+use crate::common::utils::resource::load_config;
 use rbs::to_value;
 use serde::{Deserialize, Serialize};
-use crate::common::utils::resource::load_config;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -61,7 +61,7 @@ impl Default for SystemConfig {
         // let mut cfg_data = "".to_string();
         // f.read_to_string(&mut cfg_data)
         //     .expect("read 'application.yml' fail");
-       let cfg_data= load_config().expect("read 'application.yml' fail");
+        let cfg_data = load_config().expect("read 'application.yml' fail");
         //load config
         let mut result: SystemConfig =
             serde_yml::from_str(&cfg_data).expect("load config file fail");

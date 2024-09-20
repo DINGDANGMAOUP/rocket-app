@@ -2,13 +2,13 @@ use actix_web::{
     middleware::{Compress, Logger},
     web, App, HttpServer,
 };
+use rust_platform::middleware::filter::jwt_filter::JWTFilter;
 use rust_platform::middleware::filter::test_filter::SayHi;
 use rust_platform::{
     config,
     controller::{index_controller, user_controller},
     domain,
 };
-use rust_platform::middleware::filter::jwt_filter::JWTFilter;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
