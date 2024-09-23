@@ -1,4 +1,4 @@
-use crate::common::utils::resource::load_secret;
+use crate::common::utils::resource_util::load_secret;
 use crate::config::config::SYSTEM_CONFIG;
 use crate::error::Error;
 use chrono::Local;
@@ -25,7 +25,7 @@ impl Default for Claims {
             aud: None,
             exp,
             iat: Some(Local::now().timestamp() as usize),
-            iss: None,
+            iss: Some("dingdangmaoup".to_string()),
             nbf: Some(Local::now().timestamp() as usize),
             sub: None,
         }

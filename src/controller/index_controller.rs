@@ -1,4 +1,4 @@
-use crate::common::utils::resource::handle_web_file;
+use crate::common::utils::resource_util::handle_web_file;
 use actix_web::{web, Responder};
 
 pub async fn index() -> impl Responder {

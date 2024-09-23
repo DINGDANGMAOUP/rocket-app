@@ -1,4 +1,4 @@
-use crate::common::utils::resource::load_config;
+use crate::common::utils::resource_util::load_config;
 use lazy_static::lazy_static;
 use rbs::to_value;
 use serde::{Deserialize, Serialize};

@@ -1,3 +1,4 @@
+use crate::common::pojo::dto::request::auth_request::LoginRequest;
 use crate::common::pojo::dto::request::query::UserPageQuery;
 use crate::common::pojo::dto::request::user_request::UserCreateRequest;
 use crate::domain::table::user::User;
@@ -28,4 +29,16 @@ pub async fn page_list(rb: &Data<RBatis>, params: &UserPageQuery) -> Result<Page
     )
     .await?;
     Ok(page)
+}
+
+pub async fn authenticate(rb: &Data<RBatis>, params: &LoginRequest) -> Result<(), Error> {
+    // let user = User::select_by_username(&***rb, "admin").await?;
+    // if user.is_none() {
+    //     return Err(Error::Unauthorized(serde_json::json!("user not found")));
+    // }
+    // let user = user.unwrap();
+    // if user.password != "123456" {
+    //     return Err(Error::Unauthorized(serde_json::json!("password error")));
+    // }
+    Ok(())
 }

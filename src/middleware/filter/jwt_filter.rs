@@ -1,9 +1,12 @@
-use crate::common::utils::jwt::parse_jwt;
+use crate::common::utils::address_util;
+use crate::common::utils::jwt_util::parse_jwt;
 use crate::config::config::SYSTEM_CONFIG;
 use crate::response::ResponseDesc;
 use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
+use actix_web::rt::Runtime;
 use actix_web::Error;
 use futures::future::err;
+use futures::FutureExt;
 use serde_json::json;
 use std::future::{ready, Future, Ready};
 use std::pin::Pin;
@@ -45,6 +48,17 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
+        // let connect = &*req.connection_info();
+        // let remote_ip = &connect.realip_remote_addr().unwrap();
+        // // let address = address_util::get_ip_address(remote_ip).await.unwrap();
+        // let address=Runtime::new().unwrap().block_on(
+        //     async {
+        //         let address = address_util::get_ip_address(remote_ip).await.unwrap();
+        //         address
+        //     }
+        // );
+        // log::debug!("address :{}", address);
+
         //获取resource路径
         log::debug!("jwt filter :{:?}", req);
         let config = &SYSTEM_CONFIG;
@@ -116,8 +130,8 @@ where
 }
 #[cfg(test)]
 mod tests {
-    use crate::common::utils::jwt::Claims;
-    use crate::common::utils::resource::load_secret;
+    use crate::common::utils::jwt_util::Claims;
+    use crate::common::utils::resource_util::load_secret;
     use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
     use std::collections::HashMap;
 
