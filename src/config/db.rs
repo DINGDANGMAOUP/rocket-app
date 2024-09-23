@@ -1,7 +1,7 @@
-use std::{sync::Arc, time::Duration};
 use crate::common::plugins::returning_id_plugin::ReturningIdPlugin;
-use crate::config::config::{SystemConfig};
+use crate::config::config::SystemConfig;
 use rbatis::RBatis;
+use std::{sync::Arc, time::Duration};
 
 pub async fn init_db(config: &SystemConfig) -> RBatis {
     let rb = RBatis::new();

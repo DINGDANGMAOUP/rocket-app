@@ -1,4 +1,3 @@
-use std::fmt::{Display, Formatter};
 use crate::common::constants::http_code;
 use actix_web::HttpResponse;
 use serde::{ser, Deserialize, Serialize};
@@ -40,7 +39,7 @@ pub struct ResponseDesc {
     pub err_message: Option<String>,
 }
 
-#[derive(Serialize, Deserialize,Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ResponseErr<T: ser::Serialize> {
     pub success: bool,
@@ -48,7 +47,6 @@ pub struct ResponseErr<T: ser::Serialize> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub err_message: Option<T>,
 }
-
 
 impl Response {
     pub fn build_success() -> HttpResponse {

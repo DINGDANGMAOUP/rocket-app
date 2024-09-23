@@ -11,9 +11,12 @@ app:
     dbPoolTimeout: 60
    security:
      whiteList:
+       - /oauth
        - /favicon.ico
        - /ui
-     secret: npznLyKofyPHmbIf
+     token:
+       prefix: Bearer
+       expire: 360
 logging:
   level: debug
   dir: logs/app.log

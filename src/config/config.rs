@@ -1,5 +1,5 @@
-use lazy_static::lazy_static;
 use crate::common::utils::resource::load_config;
+use lazy_static::lazy_static;
 use rbs::to_value;
 use serde::{Deserialize, Serialize};
 
@@ -27,7 +27,7 @@ pub struct LogConfig {
     // The following options need to be enabled:
     // Inside the toml file, add to 'fast_log': fast_log = { version = "1.5", features = ["lz4", "zip", "gzip"]}
     // In src/config/log.rs, uncomment the section under fn choose_packer()
-    // In application.json5, add: log_pack_compress: "zip"
+    // In application.yml, add: log_pack_compress: "zip"
     pub pack_compress: String,
     //Log channel length: null for unbounded queue, non-null for bounded queue (better performance)
     pub chan_len: usize,
@@ -41,9 +41,15 @@ pub struct Datasource {
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
+pub struct Token {
+    pub prefix: String,
+    pub expire: u64,
+}
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct SecurityConfig {
     pub white_list: Vec<String>,
-    pub secret: String,
+    pub token: Token,
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -63,10 +69,6 @@ pub struct SystemConfig {
 
 impl Default for SystemConfig {
     fn default() -> Self {
-        // let mut f = File::open("application.yml").expect("not find 'application.yml'");
-        // let mut cfg_data = "".to_string();
-        // f.read_to_string(&mut cfg_data)
-        //     .expect("read 'application.yml' fail");
         let cfg_data = load_config().expect("read 'application.yml' fail");
         //load config
         let mut result: SystemConfig =
@@ -89,9 +91,9 @@ impl Default for SystemConfig {
         result
     }
 }
-lazy_static!(
+lazy_static! {
     pub static ref SYSTEM_CONFIG: SystemConfig = SystemConfig::default();
-);
+}
 mod test {
 
     #[test]

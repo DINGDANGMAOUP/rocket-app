@@ -27,6 +27,10 @@ pub enum Error {
     //500
     #[fail(display = "Internal Server Error")]
     InternalServerError,
+
+    //jwt parse error
+    #[fail(display = "jwt parse error")]
+    JwtParseError(JsonValue),
 }
 
 impl ResponseError for Error {
@@ -45,6 +49,11 @@ impl ResponseError for Error {
             //     code: 404,
             //     message: Some(e.clone())
             // }),
+            Error::JwtParseError(e) => HttpResponse::Unauthorized().json(ResponseErr {
+                success: false,
+                err_code: String::from(http_code::JWT_PARSE_ERROR),
+                err_message: Some(e.clone()),
+            }),
             Error::UnprocessableEntity(e) => {
                 HttpResponse::UnprocessableEntity().json(ResponseErr {
                     success: false,
@@ -80,3 +89,8 @@ impl From<RBError> for Error {
     }
 }
 
+impl From<jsonwebtoken::errors::Error> for Error {
+    fn from(e: jsonwebtoken::errors::Error) -> Self {
+        Error::JwtParseError(json!(e.to_string()))
+    }
+}

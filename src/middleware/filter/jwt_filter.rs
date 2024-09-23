@@ -1,13 +1,14 @@
+use crate::common::utils::jwt::parse_jwt;
 use crate::config::config::SYSTEM_CONFIG;
 use crate::response::ResponseDesc;
 use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
 use actix_web::Error;
 use futures::future::err;
-use jsonwebtoken::{decode, DecodingKey, Validation};
 use serde_json::json;
-use std::collections::HashMap;
 use std::future::{ready, Future, Ready};
 use std::pin::Pin;
+
+const AUTH_HEADER: &str = "Authorization";
 
 pub struct JWTFilter;
 
@@ -44,7 +45,8 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        log::info!("Hi from start. You requested: {:?}", req);
+        //获取resource路径
+        log::debug!("jwt filter :{:?}", req);
         let config = &SYSTEM_CONFIG;
         let security_config = config.app.security.clone();
         //判断是否白名单 如果是白名单则直接放行
@@ -62,41 +64,87 @@ where
         }
 
         let headers = req.headers();
-        let token = {
-            match headers.get("Authorization") {
-                Some(token) => token,
-                None => {
-                    return Box::pin(err(actix_web::error::ErrorUnauthorized(json!(
-                        ResponseDesc {
-                            success: false,
-                            err_code: String::from("401"),
-                            err_message: Some("Unauthorized".to_string()),
-                        }
-                    ))));
-                }
+        let token = match headers.get(AUTH_HEADER) {
+            Some(token_value) => token_value,
+            None => {
+                return Box::pin(err(actix_web::error::ErrorUnauthorized(json!(
+                    ResponseDesc {
+                        success: false,
+                        err_code: String::from("401"),
+                        err_message: Some("Unauthorized".to_string()),
+                    }
+                ))));
             }
         };
-        log::info!("header :{:?}", token);
-        let tk = token.to_str().unwrap().replace("Bearer ", "");
-        log::info!("tk :{}", tk);
-        let validation = {
-            let mut validation = Validation::default();
-            validation.validate_exp = false;
-            validation.validate_aud = false;
-            validation.validate_nbf = false;
-            validation
+        log::debug!("header :{:?}", token);
+        let token = match token.to_str() {
+            Ok(token) => token,
+            Err(_) => {
+                return Box::pin(err(actix_web::error::ErrorUnauthorized(json!(
+                    ResponseDesc {
+                        success: false,
+                        err_code: String::from("402"),
+                        err_message: Some("The token cannot be null".to_string()),
+                    }
+                ))));
+            }
         };
-        let token = decode::<HashMap<String, serde_json::Value>>(
-            &tk,
-            &DecodingKey::from_secret(security_config.secret.as_ref()),
-            &validation,
-        );
-        log::info!("token:{:?}", token);
+        let mut token = &*token.replace(&security_config.token.prefix, "");
+        token = token.trim();
+        log::debug!("token :{}", token);
+        let token = parse_jwt(token);
+        let claims = match token {
+            Ok(claims) => claims,
+            Err(e) => {
+                return Box::pin(err(actix_web::error::ErrorUnauthorized(json!(
+                    ResponseDesc {
+                        success: false,
+                        err_code: String::from("403"),
+                        err_message: Some(e.to_string()),
+                    }
+                ))));
+            }
+        };
+        log::debug!("parse jwt:{:?}", claims);
         let fut = self.service.call(req);
         Box::pin(async move {
             let res = fut.await?;
-            log::info!("Hi from response");
+            log::debug!("Hi from response");
             Ok(res)
         })
+    }
+}
+#[cfg(test)]
+mod tests {
+    use crate::common::utils::jwt::Claims;
+    use crate::common::utils::resource::load_secret;
+    use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
+    use std::collections::HashMap;
+
+    #[actix_web::test]
+    async fn test_index_get() {
+        let my_claims = Claims {
+            aud: None,
+            sub: Option::from("dzhao".to_string()),
+            exp: 10000000000,
+            iat: None,
+            iss: None,
+            nbf: None,
+        };
+        let private_key = load_secret("private.pem").unwrap();
+        let token = encode(
+            &Header::new(Algorithm::RS256),
+            &my_claims,
+            &EncodingKey::from_rsa_pem(private_key.as_bytes()).unwrap(),
+        )
+        .unwrap();
+        println!("token:{}", token);
+        let public_key = load_secret("public.pem").unwrap();
+        let token_str = decode::<HashMap<String, serde_json::Value>>(
+            &token,
+            &DecodingKey::from_rsa_pem(public_key.as_bytes()).unwrap(),
+            &Validation::new(Algorithm::RS256),
+        );
+        println!("token_str:{:?}", token_str);
     }
 }

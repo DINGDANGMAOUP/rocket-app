@@ -27,6 +27,15 @@ pub fn load_config() -> Result<String, Error> {
             let content = String::from_utf8(content.data.into_owned()).unwrap();
             Ok(content)
         }
-        None => Err(Error::InternalServerError),
+        None => Err(Error::UnprocessableEntity("load config file fail".into())),
+    }
+}
+pub fn load_secret(path: &str) -> Result<String, Error> {
+    match Asset::get(format!("pem/{}", path).as_ref()) {
+        Some(content) => {
+            let content = String::from_utf8(content.data.into_owned()).unwrap();
+            Ok(content)
+        }
+        None => Err(Error::UnprocessableEntity("load secret file fail".into())),
     }
 }
