@@ -1,0 +1,12 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=RustRover
+
+###
+POST localhost:8080/oauth/login
+Content-Type: application/json
+
+{
+    "username": "dingdangmaoup",
+    "password": "123456"
+}

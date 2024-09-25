@@ -3,10 +3,7 @@ use crate::common::utils::jwt_util::parse_jwt;
 use crate::config::config::SYSTEM_CONFIG;
 use crate::response::ResponseDesc;
 use actix_web::dev::{forward_ready, Service, ServiceRequest, ServiceResponse, Transform};
-use actix_web::rt::Runtime;
 use actix_web::Error;
-use futures::future::err;
-use futures::FutureExt;
 use serde_json::json;
 use std::future::{ready, Future, Ready};
 use std::pin::Pin;
@@ -48,82 +45,73 @@ where
     forward_ready!(service);
 
     fn call(&self, req: ServiceRequest) -> Self::Future {
-        // let connect = &*req.connection_info();
-        // let remote_ip = &connect.realip_remote_addr().unwrap();
-        // // let address = address_util::get_ip_address(remote_ip).await.unwrap();
-        // let address=Runtime::new().unwrap().block_on(
-        //     async {
-        //         let address = address_util::get_ip_address(remote_ip).await.unwrap();
-        //         address
-        //     }
-        // );
-        // log::debug!("address :{}", address);
-
-        //获取resource路径
-        log::debug!("jwt filter :{:?}", req);
-        let config = &SYSTEM_CONFIG;
-        let security_config = config.app.security.clone();
-        //判断是否白名单 如果是白名单则直接放行
-        let white_list = security_config.white_list.clone();
-        let path = req.path();
-        let mut is_white = false;
-        for white in white_list {
-            if path.starts_with(&white) {
-                is_white = true;
-                break;
+        let remote_ip = req
+            .connection_info()
+            .realip_remote_addr()
+            .unwrap()
+            .to_owned();
+        let path = req.path().to_owned();
+        let headers = req.headers().to_owned();
+        let fut = self.service.call(req);
+        Box::pin(async move {
+            let remote_ip = remote_ip;
+            log::debug!("remote_ip :{:?}", remote_ip);
+            let address = address_util::get_ip_address(&remote_ip).await.unwrap();
+            log::debug!("address :{:?}", address);
+            let config = &SYSTEM_CONFIG;
+            let security_config = config.app.security.clone();
+            //判断是否白名单 如果是白名单则直接放行
+            let white_list = security_config.white_list.clone();
+            let mut is_white = false;
+            let path = path;
+            for white in white_list {
+                if path.starts_with(&white) {
+                    is_white = true;
+                    break;
+                }
             }
-        }
-        if is_white {
-            return Box::pin(self.service.call(req));
-        }
-
-        let headers = req.headers();
-        let token = match headers.get(AUTH_HEADER) {
-            Some(token_value) => token_value,
-            None => {
-                return Box::pin(err(actix_web::error::ErrorUnauthorized(json!(
-                    ResponseDesc {
+            if is_white {
+                return Ok(fut.await?);
+            }
+            let headers = headers;
+            let token = match headers.get(AUTH_HEADER) {
+                Some(token_value) => token_value,
+                None => {
+                    return Err(actix_web::error::ErrorUnauthorized(json!(ResponseDesc {
                         success: false,
                         err_code: String::from("401"),
-                        err_message: Some("Unauthorized".to_string()),
-                    }
-                ))));
-            }
-        };
-        log::debug!("header :{:?}", token);
-        let token = match token.to_str() {
-            Ok(token) => token,
-            Err(_) => {
-                return Box::pin(err(actix_web::error::ErrorUnauthorized(json!(
-                    ResponseDesc {
+                        err_message: Some("The token cannot be null".to_string()),
+                    })));
+                }
+            };
+            log::debug!("header :{:?}", token);
+            let token = match token.to_str() {
+                Ok(token) => token,
+                Err(_) => {
+                    return Err(actix_web::error::ErrorUnauthorized(json!(ResponseDesc {
                         success: false,
                         err_code: String::from("402"),
                         err_message: Some("The token cannot be null".to_string()),
-                    }
-                ))));
-            }
-        };
-        let mut token = &*token.replace(&security_config.token.prefix, "");
-        token = token.trim();
-        log::debug!("token :{}", token);
-        let token = parse_jwt(token);
-        let claims = match token {
-            Ok(claims) => claims,
-            Err(e) => {
-                return Box::pin(err(actix_web::error::ErrorUnauthorized(json!(
-                    ResponseDesc {
+                    })));
+                }
+            };
+            let mut token = &*token.replace(&security_config.token.prefix, "");
+            token = token.trim();
+            log::debug!("token :{}", token);
+            let token = parse_jwt(token);
+            let claims = match token {
+                Ok(claims) => claims,
+                Err(e) => {
+                    return Err(actix_web::error::ErrorUnauthorized(json!(ResponseDesc {
                         success: false,
                         err_code: String::from("403"),
                         err_message: Some(e.to_string()),
-                    }
-                ))));
-            }
-        };
-        log::debug!("parse jwt:{:?}", claims);
-        let fut = self.service.call(req);
-        Box::pin(async move {
+                    })));
+                }
+            };
+            log::debug!("parse jwt:{:?}", claims);
             let res = fut.await?;
-            log::debug!("Hi from response");
+            println!("Hi from response");
             Ok(res)
         })
     }

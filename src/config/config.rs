@@ -44,6 +44,7 @@ pub struct Datasource {
 pub struct Token {
     pub prefix: String,
     pub expire: u64,
+    pub issuer: String,
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]

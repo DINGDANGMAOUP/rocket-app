@@ -17,6 +17,7 @@ app:
      token:
        prefix: Bearer
        expire: 360
+       issuer: dingdangmaoup
 logging:
   level: debug
   dir: logs/app.log

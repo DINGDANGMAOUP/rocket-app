@@ -1,12 +1,14 @@
 use crate::common::pojo::dto::request::auth_request::LoginRequest;
 use crate::common::pojo::dto::request::query::UserPageQuery;
 use crate::common::pojo::dto::request::user_request::UserCreateRequest;
+use crate::common::utils::jwt_util::{gen_jwt, GrantType};
 use crate::domain::table::user::User;
 use crate::error::Error;
 use crate::mapper::user_mapper;
 use actix_web::web::Data;
 use rbatis::plugin::page::PageRequest;
 use rbatis::{Page, RBatis};
+use std::collections::HashMap;
 
 pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
     let user = User {
@@ -31,14 +33,20 @@ pub async fn page_list(rb: &Data<RBatis>, params: &UserPageQuery) -> Result<Page
     Ok(page)
 }
 
-pub async fn authenticate(rb: &Data<RBatis>, params: &LoginRequest) -> Result<(), Error> {
-    // let user = User::select_by_username(&***rb, "admin").await?;
-    // if user.is_none() {
-    //     return Err(Error::Unauthorized(serde_json::json!("user not found")));
-    // }
-    // let user = user.unwrap();
-    // if user.password != "123456" {
-    //     return Err(Error::Unauthorized(serde_json::json!("password error")));
-    // }
-    Ok(())
+pub async fn authenticate(
+    rb: &Data<RBatis>,
+    params: &LoginRequest,
+) -> Result<HashMap<String, String>, Error> {
+    let user = User::select_by_username(&***rb, "id,username,password", &params.username).await?;
+    let user = match user {
+        Some(v) => v,
+        None => return Err(Error::Unauthorized(serde_json::json!("user not found"))),
+    };
+    if params.password != user.password.unwrap() {
+        return Err(Error::Unauthorized(serde_json::json!("password error")));
+    }
+    let token = gen_jwt(&user.username.unwrap(), GrantType::AccessToken)?;
+    let mut map = HashMap::new();
+    map.insert(String::from("accessToken"), token);
+    Ok(map)
 }

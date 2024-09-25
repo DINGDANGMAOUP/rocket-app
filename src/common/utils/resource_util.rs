@@ -3,7 +3,7 @@ use crate::response::ResponseErr;
 use actix_web::HttpResponse;
 use mime_guess::from_path;
 use rust_embed::Embed;
-
+/// Embed the static files into the binary
 #[derive(Embed)]
 #[folder = "resource/"]
 struct Asset;

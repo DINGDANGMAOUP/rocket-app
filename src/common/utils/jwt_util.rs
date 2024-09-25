@@ -18,21 +18,23 @@ pub struct Claims {
 }
 impl Default for Claims {
     fn default() -> Self {
-        let expire = SYSTEM_CONFIG.app.security.token.expire;
+        let token_config = &SYSTEM_CONFIG.app.security.token;
+        let expire = &token_config.expire;
+        let issuer = &token_config.issuer;
         //生成过期时间戳
-        let exp = Local::now().timestamp() as usize + expire as usize;
+        let exp = Local::now().timestamp() as usize + expire.clone() as usize;
         Claims {
             aud: None,
             exp,
             iat: Some(Local::now().timestamp() as usize),
-            iss: Some("dingdangmaoup".to_string()),
+            iss: Some(issuer.clone()),
             nbf: Some(Local::now().timestamp() as usize),
             sub: None,
         }
     }
 }
 #[derive(Debug)]
-enum GrantType {
+pub enum GrantType {
     AccessToken,
     RefreshToken,
 }
@@ -57,7 +59,7 @@ impl From<GrantType> for String {
     fn from(g: GrantType) -> Self {
         match g {
             GrantType::AccessToken => "access_token".to_string(),
-            GrantType::RefreshToken => "refresh".to_string(),
+            GrantType::RefreshToken => "refresh_token".to_string(),
         }
     }
 }

@@ -3,6 +3,7 @@ use actix_web::{
     web, App, HttpServer,
 };
 use rust_platform::config::config::SYSTEM_CONFIG;
+use rust_platform::controller::auth_controller;
 use rust_platform::middleware::filter::jwt_filter::JWTFilter;
 use rust_platform::{
     config,
@@ -32,6 +33,7 @@ async fn main() -> std::io::Result<()> {
                     .route("", web::get().to(index_controller::index))
                     .route("/{_:.*}", web::get().to(index_controller::dist)),
             )
+            .service(web::scope("/oauth").route("/login", web::post().to(auth_controller::login)))
             .service(
                 web::scope("/user")
                     .route("", web::post().to(user_controller::create))
