@@ -71,7 +71,9 @@ where
                 }
             }
             if is_white {
-                return Ok(fut.await?);
+                let res = fut.await?;
+                println!("Hi from response");
+                return Ok(res);
             }
             let headers = headers;
             let token = match headers.get(AUTH_HEADER) {
