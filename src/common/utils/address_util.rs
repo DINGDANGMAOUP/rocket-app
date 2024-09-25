@@ -18,7 +18,7 @@ struct Address {
     pub city: String,
 }
 pub async fn get_ip_address(ip: &str) -> Result<String, Error> {
-    if ip == LOCAL_IP {
+    if ip == LOCAL_IP || "127.0.0.1" == ip {
         return Ok("内网IP".to_string());
     }
     let url = format!("{}?ip={}&json=true", IP_QUERY_URL, ip);
