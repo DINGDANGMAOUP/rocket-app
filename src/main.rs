@@ -3,7 +3,7 @@ use actix_web::{
     web, App, HttpServer,
 };
 use rust_platform::config::config::SYSTEM_CONFIG;
-use rust_platform::controller::auth_controller;
+use rust_platform::controller::{auth_controller, demo_controller};
 use rust_platform::middleware::filter::jwt_filter::JWTFilter;
 use rust_platform::{
     config,
@@ -28,6 +28,12 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(Compress::default())
             .wrap(JWTFilter)
+            .service(
+                web::scope("/demo")
+                    .route("/auth/login", web::post().to(demo_controller::demo_login))
+                    .route("/user/info", web::get().to(demo_controller::demo_user_info))
+                    .route("/auth/codes", web::get().to(demo_controller::demo_code)),
+            )
             .service(
                 web::scope("/ui")
                     .route("", web::get().to(index_controller::index))

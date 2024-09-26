@@ -11,6 +11,7 @@ app:
     dbPoolTimeout: 60
    security:
      whiteList:
+       - /demo
        - /oauth
        - /favicon.ico
        - /ui
