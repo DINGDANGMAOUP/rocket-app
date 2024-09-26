@@ -139,7 +139,7 @@ pub fn get_redis_map<V: FromRedisValue>(
 }
 
 lazy_static! {
-    pub static ref REDIS_CLIENT: redis::Client =
+    static ref REDIS_CLIENT: redis::Client =
         redis::Client::open(&*SYSTEM_CONFIG.app.redis.url).expect("redis connect fail");
 }
 
