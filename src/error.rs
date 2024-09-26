@@ -3,6 +3,7 @@ use crate::response::ResponseErr;
 use actix_web::{HttpResponse, ResponseError};
 use failure::Fail;
 use rbatis::Error as RBError;
+use redis::RedisError;
 use serde_json::{json, Value as JsonValue};
 use validator::ValidationErrors;
 
@@ -31,6 +32,8 @@ pub enum Error {
     //jwt parse error
     #[fail(display = "jwt parse error")]
     JwtParseError(JsonValue),
+    #[fail(display = "Redis Error")]
+    RedisError(JsonValue),
 }
 
 impl ResponseError for Error {
@@ -49,6 +52,11 @@ impl ResponseError for Error {
             //     code: 404,
             //     message: Some(e.clone())
             // }),
+            Error::RedisError(e) => HttpResponse::InternalServerError().json(ResponseErr {
+                success: false,
+                err_code: String::from(http_code::UNPROCESSABLE),
+                err_message: Some(e.clone()),
+            }),
             Error::JwtParseError(e) => HttpResponse::Unauthorized().json(ResponseErr {
                 success: false,
                 err_code: String::from(http_code::JWT_PARSE_ERROR),
@@ -92,5 +100,11 @@ impl From<RBError> for Error {
 impl From<jsonwebtoken::errors::Error> for Error {
     fn from(e: jsonwebtoken::errors::Error) -> Self {
         Error::JwtParseError(json!(e.to_string()))
+    }
+}
+
+impl From<RedisError> for Error {
+    fn from(e: RedisError) -> Self {
+        Error::RedisError(json!(e.to_string()))
     }
 }

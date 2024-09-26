@@ -18,6 +18,9 @@ app:
        prefix: Bearer
        expire: 360
        issuer: dingdangmaoup
+   redis:
+#     url: redis://root:123456@127.0.0.1:6379/0
+     url: redis://10.10.201.24:6379/0
 logging:
   level: debug
   dir: logs/app.log

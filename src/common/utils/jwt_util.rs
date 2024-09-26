@@ -4,6 +4,7 @@ use crate::error::Error;
 use chrono::Local;
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use lazy_static::lazy_static;
+use redis::{FromRedisValue, RedisResult, RedisWrite, ToRedisArgs};
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 
@@ -15,6 +16,22 @@ pub struct Claims {
     pub iss: Option<String>, // Optional. Issuer
     pub nbf: Option<usize>, // Optional. Not Before (as UTC timestamp)
     pub sub: Option<String>, // Optional. Subject (whom token refers to)
+}
+impl FromRedisValue for Claims {
+    fn from_redis_value(v: &redis::Value) -> RedisResult<Self> {
+        let s = String::from_redis_value(v)?;
+        let claims: Claims = serde_json::from_str(&s)?;
+        Ok(claims)
+    }
+}
+impl ToRedisArgs for Claims {
+    fn write_redis_args<W>(&self, out: &mut W)
+    where
+        W: ?Sized + RedisWrite,
+    {
+        let s = serde_json::to_string(self).unwrap();
+        s.write_redis_args(out);
+    }
 }
 impl Default for Claims {
     fn default() -> Self {

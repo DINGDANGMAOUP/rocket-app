@@ -54,10 +54,19 @@ pub struct SecurityConfig {
 }
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
+pub struct RedisConfig {
+    pub url: String,
+    // pub db: u8,
+    // pub pool_size: u8,
+    // pub pool_timeout: u64,
+}
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct AppConfig {
     pub debug: bool,
     pub datasource: Datasource,
     pub security: SecurityConfig,
+    pub redis: RedisConfig,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
