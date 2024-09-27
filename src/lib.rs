@@ -11,4 +11,5 @@ pub mod error;
 pub mod mapper;
 pub mod middleware;
 pub mod response;
+pub mod security;
 pub mod service;

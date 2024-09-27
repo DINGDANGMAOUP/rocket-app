@@ -7,7 +7,7 @@ use std::collections::HashMap;
 fn redis_connect() -> RedisResult<redis::Connection> {
     REDIS_CLIENT.get_connection()
 }
-pub fn set_redis_obj<T: ToRedisArgs>(key: &str, value: T) -> RedisResult<()> {
+pub fn set_redis_obj<T: ToRedisArgs>(key: String, value: T) -> RedisResult<()> {
     let mut con = redis_connect()?;
     con.set(key, value)
 }
@@ -15,17 +15,17 @@ pub fn get_redis_obj<T: FromRedisValue>(key: &str) -> RedisResult<T> {
     let mut con = redis_connect()?;
     con.get(key)
 }
-pub fn expire_redis(key: &str, time: i64) -> RedisResult<bool> {
+pub fn expire_redis(key: &String, time: i64) -> RedisResult<bool> {
     let mut con = redis_connect()?;
     con.expire(key, time)
 }
 
-pub fn expire_at_redis(key: &str, time: i64) -> RedisResult<bool> {
+pub fn expire_at_redis(key: &String, time: i64) -> RedisResult<bool> {
     let mut con = redis_connect()?;
     con.expire_at(key, time)
 }
 
-pub fn get_expire_redis(key: &str) -> RedisResult<i64> {
+pub fn get_expire_redis(key: &String) -> RedisResult<i64> {
     let mut con = redis_connect()?;
     con.ttl(key)
 }
@@ -116,7 +116,10 @@ pub fn get_redis_zset_range_by_score<V: FromRedisValue>(
         .map(|v: Vec<V>| v.into_iter().skip(offset).take(count).collect())
 }
 
-pub fn set_redis_map<V: ToRedisArgs>(key: &str, value: HashMap<&str, V>) -> Result<bool, Error> {
+pub fn set_redis_map<V: ToRedisArgs>(
+    key: &String,
+    value: HashMap<String, V>,
+) -> Result<bool, Error> {
     let mut con = redis_connect()?;
     let mut count = 0;
     for (k, v) in value {
@@ -126,13 +129,13 @@ pub fn set_redis_map<V: ToRedisArgs>(key: &str, value: HashMap<&str, V>) -> Resu
     Ok(count > 0)
 }
 pub fn get_redis_map<V: FromRedisValue>(
-    key: &str,
+    key: String,
     field: Vec<&str>,
 ) -> Result<HashMap<String, V>, Error> {
     let mut con = redis_connect()?;
     let mut result = HashMap::new();
     for f in field {
-        let r: V = con.hget(key, f)?;
+        let r: V = con.hget(&key, f)?;
         result.insert(f.to_string(), r);
     }
     Ok(result)
@@ -147,7 +150,7 @@ lazy_static! {
 fn redis_test() {
     let key = "test";
     let value = "test";
-    set_redis_obj(key, value).unwrap();
+    set_redis_obj(key.to_string(), value).unwrap();
     let res: String = get_redis_obj(key).unwrap();
     assert_eq!(res, value);
     del_redis(key).unwrap();

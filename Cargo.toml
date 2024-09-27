@@ -15,9 +15,9 @@ serde_yml = "0.0.12"
 futures = "0.3.30"
 chrono="0.4.38"
 #rbatis deps
-rbs = { version = "4.5.18"}
+rbs = { version = "4.5.20"}
 rbatis = { version = "4.5.30",features=["debug_mode"]}
-rbdc-pg="4.5.13"
+rbdc-pg="4.5.14"
 #log
 log = "0.4.22"
 fast_log ={version= "1.7.4",features = ["lz4", "zip", "gzip"]}
@@ -31,6 +31,8 @@ rust-embed="8.5.0"
 mime_guess = "2.0.5"
 
 jsonwebtoken = "9.3.0"
-reqwest = { version = "0.12", features = ["json","blocking"] }
+reqwest = { version = "0.12.7", features = ["json","blocking"] }
 
-redis = { version = "0.27.0", features = ["tokio-comp","json","r2d2"] }
+redis = { version = "0.27.2", features = ["tokio-comp","json","r2d2"] }
+
+bcrypt = "0.15.1"

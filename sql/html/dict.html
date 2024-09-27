@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "https://raw.githubusercontent.com/rbatis/rbatis/master/rbatis-codegen/mybatis-3-mapper.dtd">
+<mapper>
+    <select id="select_dict_data">
+        `SELECT `
+        <if test="do_count == true">
+            `count(1)`
+        </if>
+        <if test="do_count == false">
+            `td.dict_name,td.dict_type,tdd.dict_label,tdd.dict_value`
+        </if>
+        ` FROM t_dict td`
+        ` LEFT JOIN t_dict_detail tdd ON td.ID = tdd.dict_type_id  WHERE tdd.dict_label is not null and tdd.dict_value is not null`
+    </select>
+</mapper>

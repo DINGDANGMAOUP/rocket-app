@@ -98,20 +98,22 @@ pub async fn sync_tables(rb: &RBatis) {
 
     let table = Dict {
         common: common.clone(),
-        dict_name: None,
-        dict_type: None,
-        status: None,
+        dict_name: Some(Default::default()),
+        dict_type: Some(Default::default()),
+        status: Some(Default::default()),
+        enable: Some(Default::default()),
     };
-    let _ = RBatis::sync(&conn, mapper, &table, "t_dict_type").await;
+    let _ = RBatis::sync(&conn, mapper, &table, "t_dict").await;
 
     let table = DictDetail {
         common: common.clone(),
-        dict_type_id: None,
-        dict_label: None,
-        dict_value: None,
-        dict_sort: None,
+        dict_type_id: Some(Default::default()),
+        dict_label: Some(Default::default()),
+        dict_value: Some(Default::default()),
+        dict_sort: Some(Default::default()),
+        enable: Some(Default::default()),
     };
-    let _ = RBatis::sync(&conn, mapper, &table, "t_dict_data").await;
+    let _ = RBatis::sync(&conn, mapper, &table, "t_dict_detail").await;
 }
 
 pub async fn sync_tables_data(rb: &RBatis) {

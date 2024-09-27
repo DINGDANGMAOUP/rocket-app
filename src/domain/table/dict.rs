@@ -9,5 +9,6 @@ pub struct Dict {
     pub dict_name: Option<String>,
     pub dict_type: Option<String>,
     pub status: Option<i32>,
+    pub enable: Option<bool>,
 }
 crud!(Dict {}, "t_dict");

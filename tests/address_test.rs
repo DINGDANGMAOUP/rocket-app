@@ -13,7 +13,7 @@ mod test {
         let objStr = serde_json::from_str::<Address>(&obj).unwrap();
         println!("obj:{:?}", json!(&objStr));
 
-        let th = Runtime::new().unwrap().block_on(async {
+        let _ = Runtime::new().unwrap().block_on(async {
             let string = get_ip_address("117.25.169.123").await.unwrap();
             println!("string:{}", string);
         });

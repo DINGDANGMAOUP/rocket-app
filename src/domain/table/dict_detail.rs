@@ -10,5 +10,6 @@ pub struct DictDetail {
     pub dict_label: Option<String>,
     pub dict_value: Option<String>,
     pub dict_sort: Option<i32>,
+    pub enable: Option<bool>,
 }
 crud!(DictDetail {}, "t_dict_detail");

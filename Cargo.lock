@@ -370,6 +370,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8c3c1a368f70d6cf7302d78f8f7093da241fb8e8807c05cc9e51a125895a6d5b"
 
 [[package]]
+name = "bcrypt"
+version = "0.15.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e65938ed058ef47d92cf8b346cc76ef48984572ade631927e9937b5ffc7662c7"
+dependencies = [
+ "base64 0.22.1",
+ "blowfish",
+ "getrandom",
+ "subtle",
+ "zeroize",
+]
+
+[[package]]
 name = "bigdecimal"
 version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -396,6 +409,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71"
 dependencies = [
  "generic-array",
+]
+
+[[package]]
+name = "blowfish"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e412e2cd0f2b2d93e02543ceae7917b3c70331573df19ee046bcbc35e45e87d7"
+dependencies = [
+ "byteorder",
+ "cipher",
 ]
 
 [[package]]
@@ -1961,9 +1984,9 @@ dependencies = [
 
 [[package]]
 name = "rbdc-pg"
-version = "4.5.13"
+version = "4.5.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b7276e573093daeac0d2de4fb973f2474a44ffa5e21c1b652e8548e6a4ddb79"
+checksum = "8fb88c10c6fa8ea98e4dedab4adeef135f4ccd152ec9b424999378d9d566918a"
 dependencies = [
  "atoi",
  "base64 0.22.1",
@@ -2013,9 +2036,9 @@ dependencies = [
 
 [[package]]
 name = "rbs"
-version = "4.5.18"
+version = "4.5.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7c83c025ab0277fbac4fdf566d68e3ff4ae7504e3595de3059e1803f7f3685e"
+checksum = "d67e9bd5df7a21d5f1b200e6378f238e146824d6ae5a217dfb1d0254cd25f138"
 dependencies = [
  "indexmap",
  "serde",
@@ -2207,6 +2230,7 @@ version = "1.0.0"
 dependencies = [
  "actix-files",
  "actix-web",
+ "bcrypt",
  "chrono",
  "failure",
  "fast_log",

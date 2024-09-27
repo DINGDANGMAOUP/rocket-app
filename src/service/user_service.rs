@@ -32,21 +32,3 @@ pub async fn page_list(rb: &Data<RBatis>, params: &UserPageQuery) -> Result<Page
     .await?;
     Ok(page)
 }
-
-pub async fn authenticate(
-    rb: &Data<RBatis>,
-    params: &LoginRequest,
-) -> Result<HashMap<String, String>, Error> {
-    let user = User::select_by_username(&***rb, "id,username,password", &params.username).await?;
-    let user = match user {
-        Some(v) => v,
-        None => return Err(Error::Unauthorized(serde_json::json!("user not found"))),
-    };
-    if params.password != user.password.unwrap() {
-        return Err(Error::Unauthorized(serde_json::json!("password error")));
-    }
-    let token = gen_jwt(&user.username.unwrap(), GrantType::AccessToken)?;
-    let mut map = HashMap::new();
-    map.insert(String::from("accessToken"), token);
-    Ok(map)
-}

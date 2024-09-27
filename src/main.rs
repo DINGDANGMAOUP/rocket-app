@@ -4,7 +4,7 @@ use actix_web::{
 };
 use rust_platform::config::config::SYSTEM_CONFIG;
 use rust_platform::controller::{auth_controller, demo_controller};
-use rust_platform::middleware::filter::jwt_filter::JWTFilter;
+use rust_platform::security::filter::jwt_filter::JWTFilter;
 use rust_platform::{
     config,
     controller::{index_controller, user_controller},
@@ -18,6 +18,7 @@ async fn main() -> std::io::Result<()> {
     let rb = config::db::init_db(&config).await;
     domain::table::table_init::sync_tables(&rb).await;
     domain::table::table_init::sync_tables_data(&rb).await;
+    config::dict::init_dict(&rb).await.expect("init dict error");
     let url = &config.server.host;
     let port = &config.server.port;
     let server_url = format!("{}:{}", url, port);
