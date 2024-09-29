@@ -33,6 +33,7 @@ mime_guess = "2.0.5"
 jsonwebtoken = "9.3.0"
 reqwest = { version = "0.12.7", features = ["json","blocking"] }
 
-redis = { version = "0.27.2", features = ["tokio-comp","json","r2d2"] }
+redis = { version = "0.27.2", features = ["tokio-comp"] }
 
 bcrypt = "0.15.1"
+

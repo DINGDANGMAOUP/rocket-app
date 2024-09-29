@@ -1,5 +1,6 @@
 use crate::common::pojo::dto::request::query::UserPageQuery;
 use crate::common::pojo::dto::request::user_request::UserCreateRequest;
+use crate::common::utils::password_util::encode;
 use crate::domain::table::user::User;
 use crate::error::Error;
 use crate::mapper::user_mapper;
@@ -11,7 +12,7 @@ pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
     let user = User {
         common: Default::default(),
         username: data.username.clone(),
-        password: data.password.clone(),
+        password: Some(encode(data.password.clone().unwrap())),
         nick_name: data.nick_name.clone(),
         phone: data.phone.clone(),
         email: data.email.clone(),

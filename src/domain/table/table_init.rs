@@ -1,4 +1,5 @@
 use crate::common::constants::menu_type;
+use crate::common::utils::password_util::default_password;
 use crate::domain::table::common_table::CommonTable;
 use crate::domain::table::dict::Dict;
 use crate::domain::table::dict_detail::DictDetail;
@@ -129,7 +130,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
         User {
             common: Default::default(),
             username: Some("admin".to_string()),
-            password: Some("123456".to_string()),
+            password: Some(default_password()),
             nick_name: Some("admin".to_string()),
             phone: Some("123456".to_string()),
             email: Some("223@qw.com".to_string()),
@@ -139,7 +140,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
         User {
             common: Default::default(),
             username: Some("user".to_string()),
-            password: Some("123".to_string()),
+            password: Some(default_password()),
             nick_name: Some("user".to_string()),
             phone: Some("123".to_string()),
             email: None,

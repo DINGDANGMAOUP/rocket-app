@@ -20,7 +20,7 @@ pub struct Claims {
 impl FromRedisValue for Claims {
     fn from_redis_value(v: &redis::Value) -> RedisResult<Self> {
         let s = String::from_redis_value(v)?;
-        let claims: Claims = serde_json::from_str(&s)?;
+        let claims: Claims = serde_json::from_str(&s).unwrap();
         Ok(claims)
     }
 }

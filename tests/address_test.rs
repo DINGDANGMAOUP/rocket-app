@@ -3,6 +3,7 @@ mod test {
     use actix_web::rt::Runtime;
     use rust_platform::common::utils::address_util::{get_ip_address, Address};
     use serde_json::json;
+    use std::collections::HashMap;
 
     #[test]
     fn test() -> Result<(), reqwest::Error> {
@@ -22,4 +23,14 @@ mod test {
         // }
         Ok(())
     }
+    // #[test]
+    // fn a_test(){
+    //     let mut  map:HashMap<String,String> = HashMap::new();
+    //     map.insert("a".to_string(),"a".to_string());
+    //     map.insert("b".to_string(),"b".to_string());
+    //     let c="c".to_string();
+    //    let cv= map[c];
+    //     println!("cv:{}",cv);
+    //
+    // }
 }
