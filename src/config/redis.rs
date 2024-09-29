@@ -7,7 +7,7 @@ use std::collections::HashMap;
 fn redis_connect() -> RedisResult<redis::Connection> {
     REDIS_CLIENT.get_connection()
 }
-pub fn set_redis_obj<T: ToRedisArgs>(key: String, value: T) -> RedisResult<()> {
+pub fn set_redis_obj<T: ToRedisArgs>(key: &str, value: T) -> RedisResult<()> {
     let mut con = redis_connect()?;
     con.set(key, value)
 }
@@ -15,17 +15,17 @@ pub fn get_redis_obj<T: FromRedisValue>(key: &str) -> RedisResult<T> {
     let mut con = redis_connect()?;
     con.get(key)
 }
-pub fn expire_redis(key: &String, time: i64) -> RedisResult<bool> {
+pub fn expire_redis(key: &str, time: i64) -> RedisResult<bool> {
     let mut con = redis_connect()?;
     con.expire(key, time)
 }
 
-pub fn expire_at_redis(key: &String, time: i64) -> RedisResult<bool> {
+pub fn expire_at_redis(key: &str, time: i64) -> RedisResult<bool> {
     let mut con = redis_connect()?;
     con.expire_at(key, time)
 }
 
-pub fn get_expire_redis(key: &String) -> RedisResult<i64> {
+pub fn get_expire_redis(key: &str) -> RedisResult<i64> {
     let mut con = redis_connect()?;
     con.ttl(key)
 }
@@ -34,7 +34,7 @@ pub fn del_redis(key: &str) -> RedisResult<bool> {
     con.del(key)
 }
 
-pub fn batch_del_redis(key: Vec<&str>) -> RedisResult<bool> {
+pub fn batch_del_redis(key: &Vec<&str>) -> RedisResult<bool> {
     let mut con = redis_connect()?;
     let res: i64 = con.del(key)?;
     Ok(res > 0)
@@ -116,10 +116,7 @@ pub fn get_redis_zset_range_by_score<V: FromRedisValue>(
         .map(|v: Vec<V>| v.into_iter().skip(offset).take(count).collect())
 }
 
-pub fn set_redis_map<V: ToRedisArgs>(
-    key: &String,
-    value: HashMap<String, V>,
-) -> Result<bool, Error> {
+pub fn set_redis_map<V: ToRedisArgs>(key: &str, value: HashMap<String, V>) -> Result<bool, Error> {
     let mut con = redis_connect()?;
     let mut count = 0;
     for (k, v) in value {
@@ -129,7 +126,7 @@ pub fn set_redis_map<V: ToRedisArgs>(
     Ok(count > 0)
 }
 pub fn get_redis_map<V: FromRedisValue>(
-    key: String,
+    key: &str,
     field: Vec<&str>,
 ) -> Result<HashMap<String, V>, Error> {
     let mut con = redis_connect()?;
@@ -150,7 +147,7 @@ lazy_static! {
 fn redis_test() {
     let key = "test";
     let value = "test";
-    set_redis_obj(key.to_string(), value).unwrap();
+    set_redis_obj(key, value).unwrap();
     let res: String = get_redis_obj(key).unwrap();
     assert_eq!(res, value);
     del_redis(key).unwrap();

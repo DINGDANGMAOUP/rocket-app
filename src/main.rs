@@ -14,8 +14,8 @@ use rust_platform::{
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let config = &SYSTEM_CONFIG;
-    config::log::init_log(&config);
-    let rb = config::db::init_db(&config).await;
+    config::log::init_log(config);
+    let rb = config::db::init_db(config).await;
     domain::table::table_init::sync_tables(&rb).await;
     domain::table::table_init::sync_tables_data(&rb).await;
     config::dict::init_dict(&rb).await.expect("init dict error");

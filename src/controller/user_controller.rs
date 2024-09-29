@@ -23,7 +23,7 @@ pub async fn create(
     data: web::Json<UserCreateRequest>,
 ) -> Result<HttpResponse, Error> {
     Validate::validate(&data.clone())?;
-    user_service::create(&rb, &*data).await;
+    user_service::create(&rb, &data).await;
     Ok(Response::build_success())
 }
 ///查询用户列表
@@ -34,7 +34,7 @@ pub async fn list(
     Validate::validate(&*params.clone())?;
     Validate::validate(&params.common.clone())?;
     println!("params : {}", json!(&*params));
-    let user_page = user_service::page_list(&rb, &*params).await?;
+    let user_page = user_service::page_list(&rb, &params).await?;
     Ok(Response::build_page(
         &user_page.records,
         user_page.total,

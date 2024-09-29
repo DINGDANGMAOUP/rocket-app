@@ -10,10 +10,7 @@ pub fn init_log(config: &SystemConfig) {
     let mut cfg = Config::new().level(parse_log_level(&config.logging.level));
     cfg = cfg.file_split(
         &config.logging.dir,
-        Rolling::new(parse_rolling_type(
-            &config.logging.rolling.as_str(),
-            &config,
-        )),
+        Rolling::new(parse_rolling_type(config.logging.rolling.as_str(), config)),
         parse_keep_type(&config.logging.keep_type),
         parse_packer(&config.logging.pack_compress),
     );
@@ -22,7 +19,7 @@ pub fn init_log(config: &SystemConfig) {
     }
     cfg = cfg.chan_len(Some(config.logging.chan_len));
     let _ = fast_log::init(cfg);
-    if config.app.debug == false {
+    if !config.app.debug {
         println!("[app] release_mode is up! [file_log] open,[console_log] disabled!");
     }
 }
@@ -82,7 +79,7 @@ fn parse_rolling_type(log_rolling: &str, config: &SystemConfig) -> RollingType {
     } else {
         panic!("unknown log_rolling '{}'", log_rolling);
     }
-    return rolling_type;
+    rolling_type
 }
 
 fn parse_packer(packer: &str) -> Box<dyn Packer> {
@@ -120,16 +117,14 @@ fn parse_keep_type(arg: &str) -> KeepType {
         arg if arg.starts_with("KeepNum(") => {
             let end = arg.find(")").unwrap();
             let num = arg["KeepNum(".len()..end].to_string();
-            return KeepType::KeepNum(num.parse::<i64>().unwrap());
+            KeepType::KeepNum(num.parse::<i64>().unwrap())
         }
         arg if arg.starts_with("KeepTime(") => {
             let end = arg.find(")").unwrap();
             let num = arg["KeepTime(".len()..end].to_string();
-            return KeepType::KeepTime(Duration::from_secs(num.parse::<u64>().unwrap()));
+            KeepType::KeepTime(Duration::from_secs(num.parse::<u64>().unwrap()))
         }
-        arg if arg.to_uppercase().as_str() == "ALL" => {
-            return KeepType::All;
-        }
+        arg if arg.to_uppercase().as_str() == "ALL" => KeepType::All,
         _ => {
             panic!("unknown keep_type '{}'", arg)
         }
@@ -137,7 +132,7 @@ fn parse_keep_type(arg: &str) -> KeepType {
 }
 
 fn parse_log_level(arg: &str) -> log::LevelFilter {
-    return match arg {
+    match arg {
         "off" => log::LevelFilter::Off,
         "warn" => log::LevelFilter::Warn,
         "error" => log::LevelFilter::Error,
@@ -145,7 +140,7 @@ fn parse_log_level(arg: &str) -> log::LevelFilter {
         "info" => log::LevelFilter::Info,
         "debug" => log::LevelFilter::Debug,
         _ => log::LevelFilter::Info,
-    };
+    }
 }
 
 mod test {

@@ -4,12 +4,13 @@ use crate::response::Response;
 use crate::service::auth_service;
 use actix_web::{web, HttpResponse};
 use rbatis::RBatis;
+use std::collections::HashMap;
 
 pub async fn login(
     rb: web::Data<RBatis>,
     params: web::Json<LoginRequest>,
 ) -> Result<HttpResponse, Error> {
-    let data = auth_service::authenticate(&rb, &*params).await?;
+    let data = auth_service::authenticate(&rb, &params).await?;
     Ok(Response::build_data(&data))
 }
 
@@ -17,6 +18,14 @@ pub async fn register(
     rb: web::Data<RBatis>,
     params: web::Json<RegisterRequest>,
 ) -> Result<HttpResponse, Error> {
-    auth_service::register(&rb, &*params).await?;
+    auth_service::register(&rb, &params).await?;
+    Ok(Response::build_success())
+}
+
+pub async fn logout() -> Result<HttpResponse, Error> {
+    Ok(Response::build_success())
+}
+
+pub async fn refresh(header: web::Header<HashMap<String, String>>) -> Result<HttpResponse, Error> {
     Ok(Response::build_success())
 }

@@ -10,6 +10,6 @@
             `td.dict_name,td.dict_type,tdd.dict_label,tdd.dict_value`
         </if>
         ` FROM t_dict td`
-        ` LEFT JOIN t_dict_detail tdd ON td.ID = tdd.dict_type_id  WHERE tdd.dict_label is not null and tdd.dict_value is not null`
+        ` LEFT JOIN t_dict_detail tdd ON td.ID = tdd.dict_type_id  WHERE tdd.dict_label is not null and tdd.dict_value is not null limit 1`
     </select>
 </mapper>

@@ -1,14 +1,11 @@
-use crate::common::pojo::dto::request::auth_request::LoginRequest;
 use crate::common::pojo::dto::request::query::UserPageQuery;
 use crate::common::pojo::dto::request::user_request::UserCreateRequest;
-use crate::common::utils::jwt_util::{gen_jwt, GrantType};
 use crate::domain::table::user::User;
 use crate::error::Error;
 use crate::mapper::user_mapper;
 use actix_web::web::Data;
 use rbatis::plugin::page::PageRequest;
 use rbatis::{Page, RBatis};
-use std::collections::HashMap;
 
 pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
     let user = User {
@@ -18,7 +15,7 @@ pub async fn create(rb: &Data<RBatis>, data: &UserCreateRequest) {
         nick_name: data.nick_name.clone(),
         phone: data.phone.clone(),
         email: data.email.clone(),
-        sex: data.sex.clone(),
+        sex: data.sex,
         enable: Some(true),
     };
     User::insert(&***rb, &user).await.unwrap();

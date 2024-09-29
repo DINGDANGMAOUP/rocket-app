@@ -1,3 +1,4 @@
+use crate::common::constants::menu_type;
 use crate::domain::table::common_table::CommonTable;
 use crate::domain::table::dict::Dict;
 use crate::domain::table::dict_detail::DictDetail;
@@ -17,7 +18,7 @@ use rbatis::RBatis;
 pub async fn sync_tables(rb: &RBatis) {
     //disable log
     let log_intercept = rb.get_intercept::<LogInterceptor>().unwrap();
-    let level = log_intercept.get_level_filter().clone();
+    let level = log_intercept.get_level_filter();
     log_intercept.set_level_filter(LevelFilter::Off);
     defer!(|| {
         log_intercept.set_level_filter(level);
@@ -119,7 +120,7 @@ pub async fn sync_tables(rb: &RBatis) {
 pub async fn sync_tables_data(rb: &RBatis) {
     let conn = rb.acquire().await.expect("init data fail");
     if let Ok(v) = User::select_by_column(&conn, "id", 0).await {
-        if v.len() > 0 {
+        if !v.is_empty() {
             //if user exists,return
             return;
         }
@@ -161,7 +162,7 @@ pub async fn sync_tables_data(rb: &RBatis) {
         status: Some(1),
         perms: None,
         icon: None,
-        type_: Some(crate::common::constants::menu_type::MenuType::Menu),
+        type_: Some(menu_type::MenuType::Menu),
     };
     let _ = Menu::insert(&conn, &menu).await;
 }
