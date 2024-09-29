@@ -51,6 +51,7 @@ impl DelegatingPasswordEncoder {
     }
 
     fn extract_id(&self, prefix_encoded_password: &str) -> Option<String> {
+        //截取{}中的id
         let start = prefix_encoded_password.find(&self.id_prefix);
         if start != Some(0) {
             return None;
@@ -87,7 +88,7 @@ impl PasswordEncoder for DelegatingPasswordEncoder {
 
     fn matches(&self, raw_password: &str, encoded_password: &str) -> bool {
         let id = self
-            .extract_id(raw_password)
+            .extract_id(encoded_password)
             .expect("No id found in encoded password");
         let delegate = match self.id_to_password_encoder.get(&id) {
             Some(delegate) => delegate.as_ref(),

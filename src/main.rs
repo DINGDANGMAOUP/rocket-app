@@ -40,7 +40,11 @@ async fn main() -> std::io::Result<()> {
                     .route("", web::get().to(index_controller::index))
                     .route("/{_:.*}", web::get().to(index_controller::dist)),
             )
-            .service(web::scope("/oauth").route("/login", web::post().to(auth_controller::login)))
+            .service(
+                web::scope("/oauth")
+                    .route("/login", web::post().to(auth_controller::login))
+                    .route("/register", web::put().to(auth_controller::register)),
+            )
             .service(
                 web::scope("/user")
                     .route("", web::post().to(user_controller::create))

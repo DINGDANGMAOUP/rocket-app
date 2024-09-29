@@ -3,7 +3,7 @@ use crate::security::encoder::password_encoder::PasswordEncoder;
 pub struct NoOpPasswordEncoder;
 
 impl PasswordEncoder for NoOpPasswordEncoder {
-    fn encode(&self, raw_password: &str) -> String {
+    fn encode(&self, raw_password: String) -> String {
         raw_password.to_string()
     }
 

@@ -1,5 +1,6 @@
 use crate::common::pojo::dto::request::auth_request::{LoginRequest, RegisterRequest};
 use crate::common::utils::jwt_util::{gen_jwt, GrantType};
+use crate::common::utils::password_util::{encode, matches};
 use crate::domain::table::user::User;
 use crate::error::Error;
 use actix_web::web::Data;
@@ -15,7 +16,7 @@ pub async fn authenticate(
         Some(v) => v,
         None => return Err(Error::Unauthorized(serde_json::json!("user not found"))),
     };
-    if params.password != user.password.unwrap() {
+    if !matches(&params.password.clone(), &user.password.clone().unwrap()) {
         return Err(Error::Unauthorized(serde_json::json!("password error")));
     }
     let token = gen_jwt(&user.username.unwrap(), GrantType::AccessToken)?;
@@ -28,7 +29,7 @@ pub async fn register(rb: &Data<RBatis>, params: &RegisterRequest) -> Result<(),
     let user = User {
         common: Default::default(),
         username: Some(params.username.clone()),
-        password: Some(params.password.clone()),
+        password: Some(encode(params.password.clone())),
         nick_name: Some(params.nick_name.clone()),
         phone: Some(params.phone.clone()),
         email: Some(params.email.clone()),

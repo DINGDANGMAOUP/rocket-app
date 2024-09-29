@@ -24,7 +24,7 @@ impl Intercept for ReturningIdPlugin {
             match result {
                 ResultType::Exec(exec_r) => {
                     let id = rb.query(&new_sql, new_args).await?;
-                    let id: String = rbatis::decode(id)?;
+                    let id: i64 = rbatis::decode(id)?;
                     let mut exec = ExecResult::default();
                     exec.last_insert_id = id.into();
                     *exec_r = Ok(exec);
